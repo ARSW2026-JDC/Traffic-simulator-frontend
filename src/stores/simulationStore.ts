@@ -6,6 +6,7 @@ import type {
   RouteInfo,
   SimulationSummary,
   BBox,
+  Intersection,
 } from '../types';
 
 interface SimulationStore {
@@ -20,6 +21,7 @@ interface SimulationStore {
   activeSimId: string | null;
   bbox: BBox | null;
   basemapId: string;
+  errorMessage: string | null;
   setFullState: (
     vehicles: Record<string, Vehicle>,
     trafficLights: Record<string, TrafficLight>,
@@ -34,6 +36,7 @@ interface SimulationStore {
   setActiveSimId: (simId: string | null) => void;
   setBbox: (bbox: BBox | null) => void;
   setBasemapId: (basemapId: string) => void;
+  setErrorMessage: (message: string | null) => void;
 }
 
 export const useSimulationStore = create<SimulationStore>((set) => ({
@@ -48,6 +51,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   activeSimId: null,
   bbox: null,
   basemapId: 'cartoLight',
+  errorMessage: null,
 
   setFullState: (vehicles, trafficLights, tick) => set({ vehicles, trafficLights, tick }),
 
@@ -82,4 +86,5 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setActiveSimId: (activeSimId) => set({ activeSimId }),
   setBbox: (bbox) => set({ bbox }),
   setBasemapId: (basemapId) => set({ basemapId }),
+  setErrorMessage: (errorMessage) => set({ errorMessage }),
 }));
