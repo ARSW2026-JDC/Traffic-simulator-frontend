@@ -6,7 +6,6 @@ import type {
   RouteInfo,
   SimulationSummary,
   BBox,
-  Intersection,
 } from '../types';
 
 interface SimulationStore {
@@ -21,6 +20,8 @@ interface SimulationStore {
   activeSimId: string | null;
   bbox: BBox | null;
   basemapId: string;
+  addMode: 'vehicle' | 'trafficLight' | null;
+  clickPosition: { lat: number; lng: number } | null;
   errorMessage: string | null;
   setFullState: (
     vehicles: Record<string, Vehicle>,
@@ -36,6 +37,8 @@ interface SimulationStore {
   setActiveSimId: (simId: string | null) => void;
   setBbox: (bbox: BBox | null) => void;
   setBasemapId: (basemapId: string) => void;
+  setAddMode: (mode: 'vehicle' | 'trafficLight' | null) => void;
+  setClickPosition: (pos: { lat: number; lng: number } | null) => void;
   setErrorMessage: (message: string | null) => void;
 }
 
@@ -51,6 +54,8 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   activeSimId: null,
   bbox: null,
   basemapId: 'cartoLight',
+  addMode: null,
+  clickPosition: null,
   errorMessage: null,
 
   setFullState: (vehicles, trafficLights, tick) => set({ vehicles, trafficLights, tick }),
@@ -86,5 +91,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setActiveSimId: (activeSimId) => set({ activeSimId }),
   setBbox: (bbox) => set({ bbox }),
   setBasemapId: (basemapId) => set({ basemapId }),
+  setAddMode: (addMode) => set({ addMode }),
+  setClickPosition: (clickPosition) => set({ clickPosition }),
   setErrorMessage: (errorMessage) => set({ errorMessage }),
 }));

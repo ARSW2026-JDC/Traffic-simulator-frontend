@@ -754,6 +754,14 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
     return () => { socket.off('error', onError); };
   }, [simSocket]);
 
+  const toggleMapMode = () => {
+    if (addMode === 'trafficLight') {
+      setAddMode(null);
+    } else {
+      setAddMode('trafficLight');
+    }
+  };
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!simSocket.current) return;
