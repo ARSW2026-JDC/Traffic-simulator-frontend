@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, Rectangle, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, Rectangle, TileLayer, Circle, useMap, useMapEvents } from 'react-leaflet';
 import { useSimulationStore } from '../../stores/simulationStore';
 import { BASEMAPS, DEFAULT_BASEMAP_ID } from './basemaps';
 import { useAuthStore } from '../../stores/authStore';
@@ -128,6 +128,30 @@ function BboxSelector() {
   );
 }
 
+function PickHandler() {
+  const addMode = useSimulationStore((s) => s.addMode);
+  const clickPosition = useSimulationStore((s) => s.clickPosition);
+  const setClickPosition = useSimulationStore((s) => s.setClickPosition);
+
+  useMapEvents({
+    click: (event) => {
+      if (addMode === 'trafficLight') {
+        setClickPosition({ lat: event.latlng.lat, lng: event.latlng.lng });
+      }
+    },
+  });
+
+  if (addMode !== 'trafficLight' || !clickPosition) return null;
+
+  return (
+    <Circle
+      center={[clickPosition.lat, clickPosition.lng]}
+      radius={6}
+      pathOptions={{ color: '#2258B1', fillColor: '#2258B1', fillOpacity: 0.5, weight: 2 }}
+    />
+  );
+}
+
 interface Props {
   simSocket: RefObject<Socket | null>;
 }
@@ -155,6 +179,7 @@ export default function MapView({ simSocket }: Props) {
       <CustomZoomControls />
       <SimulationViewportController />
       <BboxSelector />
+      <PickHandler />
       <Markers simSocket={simSocket} />
     </MapContainer>
   );

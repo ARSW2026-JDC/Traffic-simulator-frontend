@@ -727,7 +727,7 @@ function EntityList({
 }
 
 function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
-  const { activeSimId, addMode, setAddMode, clickPosition } = useSimulationStore();
+  const { activeSimId, addMode, setAddMode, clickPosition, setClickPosition } = useSimulationStore();
   const [type, setType] = useState<'vehicle' | 'trafficLight'>('vehicle');
   const [name, setName] = useState('');
   const [count, setCount] = useState(1);
@@ -753,6 +753,22 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
     socket.on('error', onError);
     return () => { socket.off('error', onError); };
   }, [simSocket]);
+
+  useEffect(() => {
+    if (type === 'trafficLight' && addMode !== 'trafficLight') {
+      setAddMode('trafficLight');
+    } else if (type !== 'trafficLight' && addMode === 'trafficLight') {
+      setAddMode(null);
+      setClickPosition(null);
+    }
+  }, [type, addMode, setAddMode, setClickPosition]);
+
+  useEffect(() => {
+    if (clickPosition) {
+      setLat(clickPosition.lat);
+      setLon(clickPosition.lng);
+    }
+  }, [clickPosition]);
 
   const toggleMapMode = () => {
     if (addMode === 'trafficLight') {
@@ -911,20 +927,27 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
             <label className="text-xs text-[var(--s-sub)] block mb-1">Red duration — {red}s</label>
             <input type="range" min={2} max={120} value={red} onChange={(e) => setRed(Number(e.target.value))} className="w-full accent-red-500" />
           </div>
-          <button
-            type="button"
-            onClick={toggleMapMode}
-            className={`w-full py-2 text-sm font-medium rounded-lg transition-colors ${
-              addMode === 'trafficLight'
-                ? 'bg-red-500 hover:bg-red-600 text-white'
-                : 'bg-white text-[var(--s-text)] border border-[var(--s-border)] hover:bg-gray-50'
-            }`}
-          >
-            {addMode === 'trafficLight' ? 'Cancel map mode' : 'Click on map to add'}
-          </button>
-          {addMode === 'trafficLight' && (
-            <p className="text-xs text-[var(--s-sub)] text-center">Click on an intersection in the map</p>
-          )}
+          <div className="bg-[#f0f7ff] border border-[#2258B1] rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[#2258B1]">
+                {clickPosition
+                  ? `📍 Seleccionado: ${clickPosition.lat.toFixed(5)}, ${clickPosition.lng.toFixed(5)}`
+                  : '📍 Haz clic en el mapa para elegir ubicación'}
+              </span>
+              {clickPosition && (
+                <button
+                  type="button"
+                  onClick={() => setClickPosition(null)}
+                  className="text-xs text-[#2258B1] hover:text-red-500 ml-2"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+            <p className="text-[10px] text-[#2258B1] mt-1">
+              El semáforo se colocará en la intersección más cercana
+            </p>
+          </div>
         </>
       )}
 
