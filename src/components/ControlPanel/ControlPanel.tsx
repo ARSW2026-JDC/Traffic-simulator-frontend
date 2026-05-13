@@ -85,7 +85,7 @@ export default function ControlPanel({ simSocket }: Props) {
         <select
           value={activeSimId ?? ''}
           onChange={(e) => selectSimulation(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
           <option value="">Sin simulación</option>
           {simulations.map((sim) => (
@@ -104,7 +104,7 @@ export default function ControlPanel({ simSocket }: Props) {
         <select
           value={basemapId}
           onChange={(e) => handleBasemapChange(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
           {BASEMAPS.map((entry) => (
             <option key={entry.id} value={entry.id}>
@@ -240,7 +240,7 @@ function VehicleControls({
             value={color}
             disabled={!canEdit}
             onChange={(e) => setColor(e.target.value)}
-            className="w-10 h-10 rounded cursor-pointer border border-[var(--s-border)] bg-white"
+            className="w-10 h-10 rounded cursor-pointer border border-[var(--s-border)] dark:border-[var(--s-input-border)] bg-white dark:bg-[var(--s-input-bg)]"
           />
           <span className="text-xs text-[var(--s-text)] font-mono">{color}</span>
         </div>
@@ -252,7 +252,7 @@ function VehicleControls({
           value={profile}
           disabled={!canEdit}
           onChange={(e) => setProfile(e.target.value as typeof profile)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
           <option value="aggressive">Agresivo</option>
           <option value="normal">Normal</option>
@@ -265,7 +265,7 @@ function VehicleControls({
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] dark:bg-[#3B82F6] hover:bg-[#1a46a0] dark:hover:bg-[#2563eb] text-white font-medium text-xs rounded-lg transition-colors"
         >
           Aplicar cambios
         </button>
@@ -351,7 +351,7 @@ function LightControls({
           onChange={(e) =>
             setPhase(e.target.value === '' ? '' : Number(e.target.value))
           }
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
           <option value="">Sin cambio</option>
           <option value={0}>Verde (0)</option>
@@ -390,7 +390,7 @@ function LightControls({
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] dark:bg-[#3B82F6] hover:bg-[#1a46a0] dark:hover:bg-[#2563eb] text-white font-medium text-xs rounded-lg transition-colors"
         >
           Aplicar cambios
         </button>

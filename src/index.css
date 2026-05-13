@@ -11,10 +11,29 @@ body {
   background-color: #FFFFFF;
   color: #000000;
   font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: #1A1A1A;
+  color: #F8FAFC;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #6B7280;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
 }
 
 .leaflet-container {
   background: #e2e7f1;
+}
+.dark .leaflet-container {
+  background: #2D2D2D;
 }
 
 /* Custom scrollbar */

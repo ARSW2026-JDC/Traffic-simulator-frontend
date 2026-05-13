@@ -212,7 +212,7 @@ export default function UserManagementPage() {
           <div className="um-header">
             <h1 className="um-title">Gestión de Usuarios</h1>
             <button onClick={loadUsers} className="um-refresh-btn" disabled={loading}>
-              {loading ? 'Cargando...' : 'Refresh'}
+              {loading ? 'Cargando...' : 'Actualizar'}
             </button>
           </div>
 

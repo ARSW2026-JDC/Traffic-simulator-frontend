@@ -106,8 +106,8 @@ export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
                   msg.status === 'pending' ? 'opacity-60' : ''
                 } ${
                   isOwn
-                    ? 'bg-sky-300 text-black rounded-br-sm'
-                    : 'bg-sky-500/100 text-black rounded-bl-sm'
+                    ? 'bg-sky-300 dark:bg-[#3B82F6] text-black dark:text-white rounded-br-sm'
+                    : 'bg-sky-500/100 dark:bg-[#1E3A5F] text-black dark:text-[var(--s-text)] rounded-bl-sm'
                 }`}
               >
                 {msg.content}
@@ -125,23 +125,23 @@ export default function ChatPanel({ chatSocket, pendingTimers }: Props) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKey}
-              placeholder={isConnected ? 'Send a message...' : 'Reconnecting...'}
+              placeholder={isConnected ? 'Enviar mensaje...' : 'Reconectando...'}
               maxLength={500}
               disabled={!isConnected}
-              className="flex-1 px-3 py-2 bg-surface border border-[var(--s-border)] rounded-lg text-sm text-black placeholder:text-muted focus:outline-none focus:border-blue-500 disabled:opacity-50"
+              className="flex-1 px-3 py-2 bg-surface dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-sm text-black dark:text-[var(--s-text)] placeholder:text-muted dark:placeholder:text-[var(--s-sub)] focus:outline-none focus:border-blue-500 disabled:opacity-50"
             />
             <button
               onClick={send}
               disabled={!input.trim() || !isConnected}
-              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white text-sm rounded-lg transition-colors"
+              className="px-3 py-2 bg-blue-600 dark:bg-[#3B82F6] hover:bg-blue-700 dark:hover:bg-[#2563eb] disabled:opacity-40 text-white text-sm rounded-lg transition-colors"
             >
-              Send
+              Enviar
             </button>
           </div>
         </div>
       ) : (
         <div className="p-3 border-t border-[var(--s-border)] text-center text-xs text-muted">
-          Guest mode — chat disabled
+          Modo espectador — chat deshabilitado
         </div>
       )}
     </div>
