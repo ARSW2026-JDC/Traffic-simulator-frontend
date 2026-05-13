@@ -104,7 +104,7 @@ describe('AdminPanel AddEntityForm Logic', () => {
     const type = 'vehicle';
     const addMode = useSimulationStore.getState().addMode;
     
-    if (type !== 'trafficLight' && addMode === 'trafficLight') {
+    if (addMode === 'trafficLight') {
       useSimulationStore.getState().setAddMode(null);
       useSimulationStore.getState().setClickPosition(null);
     }
@@ -208,8 +208,8 @@ describe('Simulation Control', () => {
 
   it('should handle simulation list', () => {
     const simulations = [
-      { id: 'sim-1', name: 'Test Sim 1', vehicleCount: 5, trafficLightCount: 3 },
-      { id: 'sim-2', name: 'Test Sim 2', vehicleCount: 10, trafficLightCount: 6 },
+      { simId: 'sim-1', mapId: 'map-1', nVehicles: 5, createdByUid: 'u1', createdByName: 'User', nodeId: 'n1', createdAt: 1000 },
+      { simId: 'sim-2', mapId: 'map-1', nVehicles: 10, createdByUid: 'u2', createdByName: 'User2', nodeId: 'n2', createdAt: 2000 },
     ];
     useSimulationStore.getState().setSimulationList(simulations);
     expect(useSimulationStore.getState().simulations).toEqual(simulations);

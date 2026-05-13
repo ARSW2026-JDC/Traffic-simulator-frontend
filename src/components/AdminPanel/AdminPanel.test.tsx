@@ -32,7 +32,7 @@ describe('AddEntityForm - Traffic Light Clicker Auto-Activation Logic', () => {
       const type = 'vehicle';
       const addMode = useSimulationStore.getState().addMode;
 
-      if (type !== 'trafficLight' && addMode === 'trafficLight') {
+      if (addMode === 'trafficLight') {
         useSimulationStore.getState().setAddMode(null);
         useSimulationStore.getState().setClickPosition(null);
       }

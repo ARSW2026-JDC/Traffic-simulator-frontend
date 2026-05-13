@@ -36,7 +36,7 @@ describe('AuthStore', () => {
   });
 
   it('should set user profile', () => {
-    const userProfile = { uid: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com' };
+    const userProfile = { id: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com', name: null, createdAt: new Date().toISOString() };
     useAuthStore.getState().setUser(userProfile);
     
     expect(useAuthStore.getState().user).toEqual(userProfile);
@@ -51,7 +51,7 @@ describe('AuthStore', () => {
   });
 
   it('should logout and clear session', () => {
-    const userProfile = { uid: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com' };
+    const userProfile = { id: 'test-uid', role: 'ADMIN' as const, email: 'test@example.com', name: null, createdAt: new Date().toISOString() };
     useAuthStore.getState().setUser(userProfile);
     useAuthStore.getState().setFirebaseUser({ uid: 'test' } as any, 'token');
     
@@ -77,14 +77,14 @@ describe('ChatStore', () => {
   });
 
   it('should add message', () => {
-    const msg = { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'sent' as const };
+    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'sent' as const };
     useChatStore.getState().addMessage(msg);
     
     expect(useChatStore.getState().messages).toContainEqual(msg);
   });
 
   it('should not add duplicate messages', () => {
-    const msg = { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'sent' as const };
+    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'sent' as const };
     useChatStore.getState().addMessage(msg);
     useChatStore.getState().addMessage(msg);
     
@@ -93,8 +93,8 @@ describe('ChatStore', () => {
 
   it('should set messages', () => {
     const msgs = [
-      { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'sent' as const },
-      { id: '2', text: 'World', timestamp: 124, senderId: 'user2', status: 'sent' as const },
+      { id: '1', userId: 'user1', userName: 'User1', content: 'Hello', timestamp: 123, status: 'sent' as const },
+      { id: '2', userId: 'user2', userName: 'User2', content: 'World', timestamp: 124, status: 'sent' as const },
     ];
     useChatStore.getState().setMessages(msgs);
     
@@ -110,17 +110,17 @@ describe('ChatStore', () => {
   });
 
   it('should add optimistic message', () => {
-    const msg = { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'pending' as const, clientId: 'client-1' };
+    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
     useChatStore.getState().addOptimisticMessage(msg);
     
     expect(useChatStore.getState().messages).toContainEqual(msg);
   });
 
   it('should confirm message', () => {
-    const optimisticMsg = { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'pending' as const, clientId: 'client-1' };
+    const optimisticMsg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
     useChatStore.getState().addOptimisticMessage(optimisticMsg);
     
-    const serverMsg = { id: 'server-1', text: 'Hello', timestamp: 124, senderId: 'user1', status: 'sent' as const };
+    const serverMsg = { id: 'server-1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 124, status: 'sent' as const };
     useChatStore.getState().confirmMessage('client-1', serverMsg);
     
     const msgs = useChatStore.getState().messages;
@@ -128,7 +128,7 @@ describe('ChatStore', () => {
   });
 
   it('should fail message', () => {
-    const msg = { id: '1', text: 'Hello', timestamp: 123, senderId: 'user1', status: 'pending' as const, clientId: 'client-1' };
+    const msg = { id: '1', userId: 'user1', userName: 'User', content: 'Hello', timestamp: 123, status: 'pending' as const, clientId: 'client-1' };
     useChatStore.getState().addOptimisticMessage(msg);
     
     useChatStore.getState().failMessage('client-1');
@@ -139,11 +139,11 @@ describe('ChatStore', () => {
 
   it('should merge history', () => {
     const serverMsgs = [
-      { id: 's1', text: 'Server 1', timestamp: 100, senderId: 'user1', status: 'sent' as const },
-      { id: 's2', text: 'Server 2', timestamp: 200, senderId: 'user2', status: 'sent' as const },
+      { id: 's1', userId: 'user1', userName: 'User1', content: 'Server 1', timestamp: 100, status: 'sent' as const },
+      { id: 's2', userId: 'user2', userName: 'User2', content: 'Server 2', timestamp: 200, status: 'sent' as const },
     ];
     
-    const localMsg = { id: 'local1', text: 'Local', timestamp: 150, senderId: 'user1', status: 'pending' as const };
+    const localMsg = { id: 'local1', userId: 'user1', userName: 'User', content: 'Local', timestamp: 150, status: 'pending' as const };
     useChatStore.getState().addOptimisticMessage(localMsg);
     
     useChatStore.getState().mergeHistory(serverMsgs);
@@ -155,9 +155,10 @@ describe('ChatStore', () => {
   it('should limit messages to 200 when adding via addMessage', () => {
     const msgs = Array.from({ length: 250 }, (_, i) => ({
       id: `msg-${i}`,
-      text: `Message ${i}`,
+      userId: 'user1',
+      userName: 'User',
+      content: `Message ${i}`,
       timestamp: i,
-      senderId: 'user1',
       status: 'sent' as const,
     }));
     msgs.forEach(msg => useChatStore.getState().addMessage(msg));
@@ -179,15 +180,15 @@ describe('HistoryStore', () => {
   });
 
   it('should add entry', () => {
-    const entry = { id: '1', type: 'vehicle_added' as const, description: 'Vehicle added', timestamp: 123, userId: 'user1', changes: {} };
+    const entry = { id: '1', userId: 'user1', userName: 'User', entityType: 'vehicle', entityId: 'v1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 123 };
     useHistoryStore.getState().addEntry(entry);
     
     expect(useHistoryStore.getState().entries).toContainEqual(entry);
   });
 
   it('should prepend new entries', () => {
-    const entry1 = { id: '1', type: 'vehicle_added' as const, description: 'First', timestamp: 100, userId: 'user1', changes: {} };
-    const entry2 = { id: '2', type: 'traffic_light_added' as const, description: 'Second', timestamp: 200, userId: 'user1', changes: {} };
+    const entry1 = { id: '1', userId: 'user1', userName: 'User', entityType: 'vehicle', entityId: 'v1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 100 };
+    const entry2 = { id: '2', userId: 'user1', userName: 'User', entityType: 'trafficLight', entityId: 'tl1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 200 };
     
     useHistoryStore.getState().addEntry(entry1);
     useHistoryStore.getState().addEntry(entry2);
@@ -199,11 +200,15 @@ describe('HistoryStore', () => {
 it('should limit entries to 200 when adding via addEntry', () => {
     const entries = Array.from({ length: 250 }, (_, i) => ({
       id: `entry-${i}`,
-      type: 'vehicle_added' as const,
-      description: `Entry ${i}`,
-      timestamp: i,
       userId: 'u1',
-      changes: {},
+      userName: 'User',
+      entityType: 'vehicle',
+      entityId: 'v1',
+      action: 'add' as const,
+      field: 'count',
+      oldValue: '0',
+      newValue: '1',
+      timestamp: i,
     }));
  
     entries.forEach(entry => useHistoryStore.getState().addEntry(entry));
@@ -213,7 +218,7 @@ it('should limit entries to 200 when adding via addEntry', () => {
 
   it('should set entries', () => {
     const entries = [
-      { id: '1', type: 'vehicle_added' as const, description: 'Added', timestamp: 123, userId: 'user1', changes: {} },
+      { id: '1', userId: 'user1', userName: 'User', entityType: 'vehicle', entityId: 'v1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 123 },
     ];
     useHistoryStore.getState().setEntries(entries);
     
@@ -248,8 +253,8 @@ describe('SimulationStore', () => {
   });
 
   it('should set full state', () => {
-    const vehicles = { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } };
-    const trafficLights = { 'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, nodeId: 1 } };
+    const vehicles = { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } };
+    const trafficLights = { 'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } };
     
     useSimulationStore.getState().setFullState(vehicles, trafficLights, 100);
     
@@ -261,7 +266,7 @@ describe('SimulationStore', () => {
 
   it('should apply delta updates', () => {
     useSimulationStore.getState().setFullState(
-      { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
+      { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
       {},
       0
     );
@@ -270,7 +275,8 @@ describe('SimulationStore', () => {
       vehicles: { 'v1': { speed: 20 } },
       trafficLights: {},
       removed: [],
-      tick: 1
+      tick: 1,
+      timestamp: 100,
     };
     
     useSimulationStore.getState().applyDelta(delta);
@@ -280,8 +286,8 @@ describe('SimulationStore', () => {
 
   it('should remove deleted entities', () => {
     useSimulationStore.getState().setFullState(
-      { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
-      { 'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, nodeId: 1 } },
+      { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
+      { 'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } },
       0
     );
     
@@ -289,7 +295,8 @@ describe('SimulationStore', () => {
       vehicles: {},
       trafficLights: {},
       removed: ['v1', 'tl1'],
-      tick: 1
+      tick: 1,
+      timestamp: 100,
     };
     
     useSimulationStore.getState().applyDelta(delta);
@@ -336,7 +343,7 @@ describe('SimulationStore', () => {
   });
 
   it('should set simulation list', () => {
-    const simulations = [{ id: 'sim1', name: 'Test Sim', vehicleCount: 5, trafficLightCount: 3 }];
+    const simulations = [{ simId: 'sim1', mapId: 'map-1', nVehicles: 5, createdByUid: 'u1', createdByName: 'User', nodeId: 'n1', createdAt: 1000 }];
     useSimulationStore.getState().setSimulationList(simulations);
     expect(useSimulationStore.getState().simulations).toEqual(simulations);
   });
@@ -364,7 +371,7 @@ describe('SimulationStore', () => {
   });
 
   it('should set routes', () => {
-    const routes = [{ vehicleId: 'v1', path: [[4.7, -74.0], [4.8, -74.1]] }];
+    const routes = [{ id: 'r1', name: 'Route 1' }];
     useSimulationStore.getState().setRoutes(routes);
     expect(useSimulationStore.getState().routes).toEqual(routes);
   });

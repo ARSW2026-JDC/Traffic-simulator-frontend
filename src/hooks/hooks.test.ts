@@ -30,9 +30,10 @@ describe('useChatSocket', () => {
   it('should handle message reception', () => {
     const msg = {
       id: 'msg-1',
-      text: 'Hello',
+      userId: 'user-1',
+      userName: 'User',
+      content: 'Hello',
       timestamp: 1234567890,
-      senderId: 'user-1',
       status: 'sent' as const,
     };
     useChatStore.getState().addMessage(msg);
@@ -47,9 +48,10 @@ describe('useChatSocket', () => {
   it('should handle optimistic messages', () => {
     const msg = {
       id: 'msg-1',
-      text: 'Sending...',
+      userId: 'user-1',
+      userName: 'User',
+      content: 'Sending...',
       timestamp: 1234567890,
-      senderId: 'user-1',
       status: 'pending' as const,
       clientId: 'client-1',
     };
@@ -60,9 +62,10 @@ describe('useChatSocket', () => {
   it('should handle message confirmation', () => {
     const optimisticMsg = {
       id: 'msg-1',
-      text: 'Hello',
+      userId: 'user-1',
+      userName: 'User',
+      content: 'Hello',
       timestamp: 1234567890,
-      senderId: 'user-1',
       status: 'pending' as const,
       clientId: 'client-1',
     };
@@ -70,9 +73,10 @@ describe('useChatSocket', () => {
     
     const serverMsg = {
       id: 'server-msg-1',
-      text: 'Hello',
+      userId: 'user-1',
+      userName: 'User',
+      content: 'Hello',
       timestamp: 1234567891,
-      senderId: 'user-1',
       status: 'sent' as const,
     };
     useChatStore.getState().confirmMessage('client-1', serverMsg);
@@ -83,9 +87,10 @@ describe('useChatSocket', () => {
   it('should handle message failure', () => {
     const msg = {
       id: 'msg-1',
-      text: 'Hello',
+      userId: 'user-1',
+      userName: 'User',
+      content: 'Hello',
       timestamp: 1234567890,
-      senderId: 'user-1',
       status: 'pending' as const,
       clientId: 'client-1',
     };
@@ -97,8 +102,8 @@ describe('useChatSocket', () => {
 
   it('should handle history merge', () => {
     const serverMsgs = [
-      { id: 's1', text: 'Server 1', timestamp: 100, senderId: 'u1', status: 'sent' as const },
-      { id: 's2', text: 'Server 2', timestamp: 200, senderId: 'u2', status: 'sent' as const },
+      { id: 's1', userId: 'u1', userName: 'User1', content: 'Server 1', timestamp: 100, status: 'sent' as const },
+      { id: 's2', userId: 'u2', userName: 'User2', content: 'Server 2', timestamp: 200, status: 'sent' as const },
     ];
     useChatStore.getState().mergeHistory(serverMsgs);
     
@@ -115,11 +120,15 @@ describe('useHistorySocket', () => {
   it('should handle entry addition', () => {
     const entry = {
       id: 'entry-1',
-      type: 'vehicle_added' as const,
-      description: 'Vehicle added',
-      timestamp: 1234567890,
       userId: 'user-1',
-      changes: {},
+      userName: 'User',
+      entityType: 'vehicle',
+      entityId: 'v1',
+      action: 'add' as const,
+      field: 'count',
+      oldValue: '0',
+      newValue: '1',
+      timestamp: 1234567890,
     };
     useHistoryStore.getState().addEntry(entry);
     expect(useHistoryStore.getState().entries).toContainEqual(entry);
@@ -127,8 +136,8 @@ describe('useHistorySocket', () => {
 
   it('should handle entries loading', () => {
     const entries = [
-      { id: 'e1', type: 'vehicle_added' as const, description: 'Added', timestamp: 100, userId: 'u1', changes: {} },
-      { id: 'e2', type: 'traffic_light_added' as const, description: 'Added TL', timestamp: 200, userId: 'u2', changes: {} },
+      { id: 'e1', userId: 'u1', userName: 'User1', entityType: 'vehicle', entityId: 'v1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 100 },
+      { id: 'e2', userId: 'u2', userName: 'User2', entityType: 'trafficLight', entityId: 'tl1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 200 },
     ];
     useHistoryStore.getState().setEntries(entries);
     expect(useHistoryStore.getState().entries).toEqual(entries);
@@ -142,11 +151,15 @@ describe('useHistorySocket', () => {
   it('should limit entries to 250 when adding via addEntry', () => {
     const entries = Array.from({ length: 250 }, (_, i) => ({
       id: `e${i}`,
-      type: 'vehicle_added' as const,
-      description: `Entry ${i}`,
-      timestamp: i,
       userId: 'u1',
-      changes: {},
+      userName: 'User',
+      entityType: 'vehicle',
+      entityId: 'v1',
+      action: 'add' as const,
+      field: 'count',
+      oldValue: '0',
+      newValue: '1',
+      timestamp: i,
     }));
     entries.forEach(entry => useHistoryStore.getState().addEntry(entry));
     
@@ -162,10 +175,10 @@ describe('useSimulationSocket', () => {
 
   it('should handle full state update', () => {
     const vehicles = {
-      'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' },
+      'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const },
     };
     const trafficLights = {
-      'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, nodeId: 1 },
+      'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 },
     };
     useSimulationStore.getState().setFullState(vehicles, trafficLights, 100);
     
@@ -177,7 +190,7 @@ describe('useSimulationSocket', () => {
 
   it('should handle delta updates', () => {
     useSimulationStore.getState().setFullState(
-      { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
+      { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
       {},
       0
     );
@@ -187,6 +200,7 @@ describe('useSimulationSocket', () => {
       trafficLights: {},
       removed: [],
       tick: 1,
+      timestamp: 100,
     };
     
     useSimulationStore.getState().applyDelta(delta);
@@ -196,8 +210,8 @@ describe('useSimulationSocket', () => {
 
   it('should handle removed entities', () => {
     useSimulationStore.getState().setFullState(
-      { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
-      { 'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, nodeId: 1 } },
+      { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
+      { 'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } },
       0
     );
     
@@ -206,6 +220,7 @@ describe('useSimulationSocket', () => {
       trafficLights: {},
       removed: ['v1', 'tl1'],
       tick: 1,
+      timestamp: 100,
     };
     
     useSimulationStore.getState().applyDelta(delta);

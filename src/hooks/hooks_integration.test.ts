@@ -74,8 +74,8 @@ describe('useSimulationSocket - Full Integration', () => {
     it('should handle fullUpdate message', () => {
       const fullUpdateMsg = {
         type: 'fullUpdate',
-        vehicles: { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
-        trafficLights: { 'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red', greenDuration: 30, nodeId: 1 } },
+        vehicles: { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
+        trafficLights: { 'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } },
         tick: 100,
       };
       
@@ -93,7 +93,7 @@ describe('useSimulationSocket - Full Integration', () => {
 
     it('should handle delta message with changes', () => {
       useSimulationStore.getState().setFullState(
-        { 'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' } },
+        { 'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
         {},
         0
       );
@@ -104,6 +104,7 @@ describe('useSimulationSocket - Full Integration', () => {
         trafficLights: {},
         removed: [],
         tick: 1,
+        timestamp: 100,
       };
       
       useSimulationStore.getState().applyDelta(deltaMsg);
@@ -116,8 +117,8 @@ describe('useSimulationSocket - Full Integration', () => {
     it('should handle removed vehicles in delta', () => {
       useSimulationStore.getState().setFullState(
         { 
-          'v1': { id: 'v1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000' },
-          'v2': { id: 'v2', lat: 4.8, lon: -74.1, speed: 10, heading: 0, color: '#00FF00' },
+          'v1': { id: 'v1', name: 'V1', lat: 4.7, lon: -74.0, speed: 10, heading: 0, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const },
+          'v2': { id: 'v2', name: 'V2', lat: 4.8, lon: -74.1, speed: 10, heading: 0, color: '#00FF00', routeId: 'r2', waypointIndex: 0, status: 'moving' as const },
         },
         {},
         0
@@ -129,6 +130,7 @@ describe('useSimulationSocket - Full Integration', () => {
         trafficLights: {},
         removed: ['v1'],
         tick: 1,
+        timestamp: 100,
       };
       
       useSimulationStore.getState().applyDelta(deltaMsg);
@@ -141,8 +143,8 @@ describe('useSimulationSocket - Full Integration', () => {
       useSimulationStore.getState().setFullState(
         {},
         { 
-          'tl1': { id: 'tl1', lat: 4.7, lon: -74.0, state: 'red', greenDuration: 30, nodeId: 1 },
-          'tl2': { id: 'tl2', lat: 4.8, lon: -74.1, state: 'green', greenDuration: 30, nodeId: 2 },
+          'tl1': { id: 'tl1', name: 'TL1', lat: 4.7, lon: -74.0, state: 'red', greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 },
+          'tl2': { id: 'tl2', name: 'TL2', lat: 4.8, lon: -74.1, state: 'green', greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 },
         },
         0
       );
@@ -153,6 +155,7 @@ describe('useSimulationSocket - Full Integration', () => {
         trafficLights: {},
         removed: [],
         tick: 1,
+        timestamp: 100,
       };
       
       // Simulate removal via direct store operation
@@ -238,9 +241,10 @@ describe('useChatSocket - Full Integration', () => {
     it('should handle message event', () => {
       const message = {
         id: 'msg-1',
-        text: 'Hello World',
+        userId: 'user-1',
+        userName: 'User',
+        content: 'Hello World',
         timestamp: 1234567890,
-        senderId: 'user-1',
         status: 'sent' as const,
       };
       
@@ -251,8 +255,8 @@ describe('useChatSocket - Full Integration', () => {
 
     it('should handle history event', () => {
       const history = [
-        { id: 'msg-1', text: 'First', timestamp: 1000, senderId: 'u1', status: 'sent' as const },
-        { id: 'msg-2', text: 'Second', timestamp: 2000, senderId: 'u2', status: 'sent' as const },
+        { id: 'msg-1', userId: 'u1', userName: 'User1', content: 'First', timestamp: 1000, status: 'sent' as const },
+        { id: 'msg-2', userId: 'u2', userName: 'User2', content: 'Second', timestamp: 2000, status: 'sent' as const },
       ];
       
       useChatStore.getState().setMessages(history);
@@ -274,9 +278,10 @@ describe('useChatSocket - Full Integration', () => {
     it('should add optimistic message before server response', () => {
       const optimisticMsg = {
         id: 'temp-1',
-        text: 'Sending...',
+        userId: 'user-1',
+        userName: 'User',
+        content: 'Sending...',
         timestamp: 1234567890,
-        senderId: 'user-1',
         status: 'pending' as const,
         clientId: 'client-1',
       };
@@ -289,9 +294,10 @@ describe('useChatSocket - Full Integration', () => {
     it('should confirm message with server response', () => {
       const optimisticMsg = {
         id: 'temp-1',
-        text: 'Sending...',
+        userId: 'user-1',
+        userName: 'User',
+        content: 'Sending...',
         timestamp: 1234567890,
-        senderId: 'user-1',
         status: 'pending' as const,
         clientId: 'client-1',
       };
@@ -299,9 +305,10 @@ describe('useChatSocket - Full Integration', () => {
       
       const serverMsg = {
         id: 'server-1',
-        text: 'Sending...',
+        userId: 'user-1',
+        userName: 'User',
+        content: 'Sending...',
         timestamp: 1234567891,
-        senderId: 'user-1',
         status: 'sent' as const,
       };
       useChatStore.getState().confirmMessage('client-1', serverMsg);
@@ -312,9 +319,10 @@ describe('useChatSocket - Full Integration', () => {
     it('should mark message as failed on error', () => {
       const msg = {
         id: 'temp-1',
-        text: 'Sending...',
+        userId: 'user-1',
+        userName: 'User',
+        content: 'Sending...',
         timestamp: 1234567890,
-        senderId: 'user-1',
         status: 'pending' as const,
         clientId: 'client-1',
       };
@@ -338,11 +346,15 @@ describe('useHistorySocket - Full Integration', () => {
     it('should handle entry event', () => {
       const entry = {
         id: 'entry-1',
-        type: 'vehicle_added' as const,
-        description: 'Vehicle added',
-        timestamp: 1234567890,
         userId: 'user-1',
-        changes: {},
+        userName: 'User',
+        entityType: 'vehicle',
+        entityId: 'v1',
+        action: 'add' as const,
+        field: 'count',
+        oldValue: '0',
+        newValue: '1',
+        timestamp: 1234567890,
       };
       
       useHistoryStore.getState().addEntry(entry);
@@ -352,8 +364,8 @@ describe('useHistorySocket - Full Integration', () => {
 
     it('should handle history event with multiple entries', () => {
       const history = [
-        { id: 'e1', type: 'vehicle_added' as const, description: 'Added', timestamp: 1000, userId: 'u1', changes: {} },
-        { id: 'e2', type: 'traffic_light_added' as const, description: 'Added TL', timestamp: 2000, userId: 'u2', changes: {} },
+        { id: 'e1', userId: 'u1', userName: 'User1', entityType: 'vehicle', entityId: 'v1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 1000 },
+        { id: 'e2', userId: 'u2', userName: 'User2', entityType: 'trafficLight', entityId: 'tl1', action: 'add' as const, field: 'count', oldValue: '0', newValue: '1', timestamp: 2000 },
       ];
       
       useHistoryStore.getState().setEntries(history);

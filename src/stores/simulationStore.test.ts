@@ -116,8 +116,8 @@ describe('simulationStore', () => {
 
   describe('full state operations', () => {
     it('should set full state with vehicles and traffic lights', () => {
-      const vehicles = { 'v-1': { id: 'v-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000' } };
-      const trafficLights = { 'tl-1': { id: 'tl-1', lat: 4.7110, lon: -74.0721, state: 'red', greenDuration: 30, nodeId: 1 } };
+      const vehicles = { 'v-1': { id: 'v-1', name: 'V-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } };
+      const trafficLights = { 'tl-1': { id: 'tl-1', name: 'TL-1', lat: 4.7110, lon: -74.0721, state: 'red' as const, greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } };
 
       useSimulationStore.getState().setFullState(vehicles, trafficLights, 100);
 
@@ -128,7 +128,7 @@ describe('simulationStore', () => {
 
     it('should apply delta updates to vehicles', () => {
       useSimulationStore.getState().setFullState(
-        { 'v-1': { id: 'v-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000' } },
+        { 'v-1': { id: 'v-1', name: 'V-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
         {},
         0
       );
@@ -137,7 +137,8 @@ describe('simulationStore', () => {
         vehicles: { 'v-1': { speed: 20 } },
         trafficLights: {},
         removed: [],
-        tick: 1
+        tick: 1,
+        timestamp: 100,
       };
 
       useSimulationStore.getState().applyDelta(delta);
@@ -149,15 +150,16 @@ describe('simulationStore', () => {
     it('should apply delta updates to traffic lights', () => {
       useSimulationStore.getState().setFullState(
         {},
-        { 'tl-1': { id: 'tl-1', lat: 4.7110, lon: -74.0721, state: 'red', greenDuration: 30, nodeId: 1 } },
+        { 'tl-1': { id: 'tl-1', name: 'TL-1', lat: 4.7110, lon: -74.0721, state: 'red', greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } },
         0
       );
 
       const delta = {
         vehicles: {},
-        trafficLights: { 'tl-1': { state: 'green' } },
+        trafficLights: { 'tl-1': { state: 'green' as const } },
         removed: [],
-        tick: 1
+        tick: 1,
+        timestamp: 100,
       };
 
       useSimulationStore.getState().applyDelta(delta);
@@ -167,8 +169,8 @@ describe('simulationStore', () => {
 
     it('should remove deleted entities from delta', () => {
       useSimulationStore.getState().setFullState(
-        { 'v-1': { id: 'v-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000' } },
-        { 'tl-1': { id: 'tl-1', lat: 4.7110, lon: -74.0721, state: 'red', greenDuration: 30, nodeId: 1 } },
+        { 'v-1': { id: 'v-1', name: 'V-1', lat: 4.7110, lon: -74.0721, speed: 10, heading: 45, color: '#FF0000', routeId: 'r1', waypointIndex: 0, status: 'moving' as const } },
+        { 'tl-1': { id: 'tl-1', name: 'TL-1', lat: 4.7110, lon: -74.0721, state: 'red', greenDuration: 30, yellowDuration: 3, redDuration: 30, stateTimer: 0 } },
         0
       );
 
@@ -176,7 +178,8 @@ describe('simulationStore', () => {
         vehicles: {},
         trafficLights: {},
         removed: ['v-1', 'tl-1'],
-        tick: 1
+        tick: 1,
+        timestamp: 100,
       };
 
       useSimulationStore.getState().applyDelta(delta);
@@ -188,7 +191,7 @@ describe('simulationStore', () => {
 
   describe('simulation list and active sim', () => {
     it('should set simulation list', () => {
-      const simulations = [{ id: 'sim-1', name: 'Test Sim', vehicleCount: 5, trafficLightCount: 3 }];
+      const simulations = [{ simId: 'sim-1', mapId: 'map-1', nVehicles: 5, createdByUid: 'u1', createdByName: 'User', nodeId: 'n1', createdAt: 1000 }];
       useSimulationStore.getState().setSimulationList(simulations);
       expect(useSimulationStore.getState().simulations).toEqual(simulations);
     });
