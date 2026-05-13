@@ -63,8 +63,6 @@ export default function ControlPanel({ simSocket }: Props) {
     setFullState({}, {}, 0);
     setRoutes([]);
     deselect();
-    simSocket.current?.emit('sync:request', { simId });
-    simSocket.current?.emit('routes:request');
   };
 
   const handleBasemapChange = (value: string) => {
@@ -87,12 +85,12 @@ export default function ControlPanel({ simSocket }: Props) {
         <select
           value={activeSimId ?? ''}
           onChange={(e) => selectSimulation(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
-          <option value="">Sin simulacion</option>
+          <option value="">Sin simulación</option>
           {simulations.map((sim) => (
             <option key={sim.simId} value={sim.simId}>
-              {sim.mapId} · {sim.nVehicles} vehiculos
+              {sim.mapId} · {sim.nVehicles} vehículos
             </option>
           ))}
         </select>
@@ -106,7 +104,7 @@ export default function ControlPanel({ simSocket }: Props) {
         <select
           value={basemapId}
           onChange={(e) => handleBasemapChange(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
           {BASEMAPS.map((entry) => (
             <option key={entry.id} value={entry.id}>
@@ -200,7 +198,7 @@ function VehicleControls({
   return (
     <div className="space-y-5 text-xs">
       <div className="bg-[var(--s-gray)] rounded-lg p-3 space-y-1">
-        <p className="text-xs text-[var(--s-sub)]">Status</p>
+        <p className="text-xs text-[var(--s-sub)]">Estado</p>
         <div className="flex items-center gap-2">
           <div
             className={`w-2 h-2 rounded-full ${
@@ -217,7 +215,7 @@ function VehicleControls({
 
       <div>
         <label className="text-xs text-[var(--s-sub)] block mb-2">
-          Speed — <span className="text-[var(--s-text)]">{speed.toFixed(2)} km/h</span>
+          Velocidad — <span className="text-[var(--s-text)]">{speed.toFixed(2)} km/h</span>
         </label>
         <input
           type="range"
@@ -242,34 +240,34 @@ function VehicleControls({
             value={color}
             disabled={!canEdit}
             onChange={(e) => setColor(e.target.value)}
-            className="w-10 h-10 rounded cursor-pointer border border-[var(--s-border)] bg-white"
+            className="w-10 h-10 rounded cursor-pointer border border-[var(--s-border)] dark:border-[var(--s-input-border)] bg-white dark:bg-[var(--s-input-bg)]"
           />
           <span className="text-xs text-[var(--s-text)] font-mono">{color}</span>
         </div>
       </div>
 
       <div>
-        <label className="text-xs text-[var(--s-sub)] block mb-2">Profile</label>
+        <label className="text-xs text-[var(--s-sub)] block mb-2">Perfil</label>
         <select
           value={profile}
           disabled={!canEdit}
           onChange={(e) => setProfile(e.target.value as typeof profile)}
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
-          <option value="aggressive">Aggressive</option>
+          <option value="aggressive">Agresivo</option>
           <option value="normal">Normal</option>
-          <option value="cautious">Cautious</option>
-          <option value="truck">Truck</option>
-          <option value="bus">Bus</option>
+          <option value="cautious">Cauteloso</option>
+          <option value="truck">Camión</option>
+          <option value="bus">Autobús</option>
         </select>
       </div>
 
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] dark:bg-[#3B82F6] hover:bg-[#1a46a0] dark:hover:bg-[#2563eb] text-white font-medium text-xs rounded-lg transition-colors"
         >
-          Apply Changes
+          Aplicar cambios
         </button>
       )}
     </div>
@@ -346,27 +344,27 @@ function LightControls({
       </div>
 
       <div>
-        <label className="text-xs text-[var(--s-sub)] block mb-2">Phase (optional)</label>
+        <label className="text-xs text-[var(--s-sub)] block mb-2">Fase (opcional)</label>
         <select
           value={phase}
           disabled={!canEdit}
           onChange={(e) =>
             setPhase(e.target.value === '' ? '' : Number(e.target.value))
           }
-          className="w-full px-3 py-2 bg-white border border-[var(--s-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
+          className="w-full px-3 py-2 bg-white dark:bg-[var(--s-input-bg)] border border-[var(--s-border)] dark:border-[var(--s-input-border)] rounded-lg text-xs text-[var(--s-text)] focus:outline-none focus:border-[#2258B1]"
         >
-          <option value="">No change</option>
-          <option value={0}>Green (0)</option>
-          <option value={1}>Yellow (1)</option>
-          <option value={2}>Red (2)</option>
+          <option value="">Sin cambio</option>
+          <option value={0}>Verde (0)</option>
+          <option value={1}>Amarillo (1)</option>
+          <option value={2}>Rojo (2)</option>
         </select>
       </div>
 
       {(
         [
-          { label: 'Green duration', value: green, set: setGreen, color: 'accent-green-500' },
-          { label: 'Yellow duration', value: yellow, set: setYellow, color: 'accent-yellow-500' },
-          { label: 'Red duration', value: red, set: setRed, color: 'accent-red-500' },
+          { label: 'Duración verde', value: green, set: setGreen, color: 'accent-green-500' },
+          { label: 'Duración amarillo', value: yellow, set: setYellow, color: 'accent-yellow-500' },
+          { label: 'Duración rojo', value: red, set: setRed, color: 'accent-red-500' },
         ] as const
       ).map(({ label, value, set, color }) => (
         <div key={label}>
@@ -392,9 +390,9 @@ function LightControls({
       {canEdit && (
         <button
           onClick={apply}
-          className="w-full py-2 bg-[#2258B1] hover:bg-[#1a46a0] text-white font-medium text-xs rounded-lg transition-colors"
+          className="w-full py-2 bg-[#2258B1] dark:bg-[#3B82F6] hover:bg-[#1a46a0] dark:hover:bg-[#2563eb] text-white font-medium text-xs rounded-lg transition-colors"
         >
-          Apply Changes
+          Aplicar cambios
         </button>
       )}
     </div>

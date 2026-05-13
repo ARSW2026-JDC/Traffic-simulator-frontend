@@ -7,6 +7,54 @@
   --a-sub:    #6B7280;
   --a-white:  #ffffff;
   --a-err:    #dc2626;
+  --a-overlay-1: rgba(34, 88, 177, 0.45);
+  --a-overlay-2: rgba(0, 127, 189, 0.35);
+  /* Form variables */
+  --input-bg: #ffffff;
+  --input-bg-hover: #f9fafb;
+  --input-text: #111827;
+  --input-border: #d1d5db;
+  --input-border-focus: #2258b1;
+  --input-placeholder: #9ca3af;
+  --input-shadow-focus: rgba(34, 88, 177, 0.2);
+  --label-text: #6b7280;
+  --label-text-focus: #2258b1;
+  --button-primary-bg: #2258b1;
+  --button-primary-hover: #1e40af;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #ffffff;
+  --button-secondary-hover: #f9fafb;
+  --button-secondary-text: #111827;
+  --button-secondary-border: #d1d5db;
+}
+
+.dark {
+  --a-blue:   #3B82F6;
+  --a-light:  #60A5FA;
+  --a-gray:   #374151;
+  --a-dark:   #F9FAFB;
+  --a-sub:    #9CA3AF;
+  --a-white:  #1A1A1A;
+  --a-err:    #F87171;
+  --a-overlay-1: rgba(59, 130, 246, 0.5);
+  --a-overlay-2: rgba(96, 165, 250, 0.4);
+  /* Form variables (dark mode) */
+  --input-bg: #374151;
+  --input-bg-hover: #4b5563;
+  --input-text: #f9fafb;
+  --input-border: #6b7280;
+  --input-border-focus: #60a5fa;
+  --input-placeholder: #9ca3af;
+  --input-shadow-focus: rgba(96, 165, 250, 0.4);
+  --label-text: #9ca3af;
+  --label-text-focus: #60a5fa;
+  --button-primary-bg: #3b82f6;
+  --button-primary-hover: #2563eb;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #374151;
+  --button-secondary-hover: #4b5563;
+  --button-secondary-text: #f9fafb;
+  --button-secondary-border: #6b7280;
 }
 
 /* ── Root ── */
@@ -23,14 +71,36 @@
   overflow: hidden;
 }
 
+.auth-theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auth-theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 /* ── Overlay — muy suave para que se vea el fondo original ── */
 .auth-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(34, 88, 177, 0.45) 0%,
-    rgba(0, 127, 189, 0.35) 100%
+    var(--a-overlay-1) 0%,
+    var(--a-overlay-2) 100%
   );
   z-index: 0;
   overflow: hidden;
@@ -161,19 +231,25 @@
 .auth-field-input {
   width: 100%;
   padding: .8rem 2.6rem .65rem 1rem;
-  border: 1.5px solid var(--a-gray);
+  border: 1.5px solid var(--input-border);
   border-radius: 9px;
   font-size: .95rem;
   font-family: 'Roboto', sans-serif;
-  color: var(--a-dark);
+  color: var(--input-text);
   outline: none;
-  background: #fff;
-  transition: border-color .25s, box-shadow .25s;
+  background: var(--input-bg);
+  transition: border-color .25s, box-shadow .25s, background-color .25s;
+}
+.auth-field-input::placeholder {
+  color: var(--input-placeholder);
+}
+.auth-field-input:hover {
+  background: var(--input-bg-hover);
 }
 .auth-field-input:focus,
 .auth-field--focused .auth-field-input {
-  border-color: var(--a-blue);
-  box-shadow: 0 0 0 3px rgba(34,88,177,.12);
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 3px var(--input-shadow-focus);
 }
 
 /* Floating label */
@@ -182,17 +258,17 @@
   left: 1rem;
   top: 1.35rem;
   font-size: .95rem;
-  color: #9CA3AF;
+  color: var(--label-text);
   pointer-events: none;
   transition: top .22s, font-size .22s, color .22s;
-  background: #fff;
+  background: var(--input-bg);
   padding: 0 .25rem;
 }
 .auth-field--lifted .auth-field-label,
 .auth-field--focused .auth-field-label {
   top: .0rem;
   font-size: .72rem;
-  color: var(--a-blue);
+  color: var(--label-text-focus);
 }
 
 /* Animated bottom bar */
@@ -257,21 +333,21 @@
   width: 78%;
   margin: .2rem auto 0;
   padding: .78rem 1rem;
-  background: linear-gradient(135deg, var(--a-blue) 0%, var(--a-light) 100%);
-  color: var(--a-white);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
   border: none;
   border-radius: 10px;
   font-size: .98rem;
   font-weight: 700;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
-  transition: transform .18s, box-shadow .18s, filter .18s;
+  transition: transform .18s, box-shadow .18s, filter .18s, background-color .2s;
   box-shadow: 0 4px 18px rgba(34,88,177,.35);
 }
 .auth-btn-main:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(34,88,177,.45);
-  filter: brightness(1.07);
+  background: var(--button-primary-hover);
 }
 .auth-btn-main:active:not(:disabled) {
   transform: translateY(1px);
@@ -315,21 +391,21 @@
   align-items: center;
   justify-content: space-between;
   padding: .65rem 1.1rem;
-  border: 1.5px solid var(--a-gray);
+  border: 1.5px solid var(--button-secondary-border);
   border-radius: 10px;
-  background: #fff;
+  background: var(--button-secondary-bg);
   cursor: pointer;
   font-size: .9rem;
   font-weight: 600;
   font-family: 'Roboto', sans-serif;
-  color: var(--a-dark);
+  color: var(--button-secondary-text);
   width: 78%;
   margin: 0 auto;
-  transition: background .2s, border-color .2s, transform .18s, box-shadow .18s;
+  transition: background .2s, border-color .2s, transform .18s, box-shadow .18s, color .2s;
 }
 .auth-btn-alt:hover:not(:disabled) {
-  background: #f0f4ff;
-  border-color: var(--a-blue);
+  background: var(--button-secondary-hover);
+  border-color: var(--input-border-focus);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(34,88,177,.12);
 }
@@ -341,8 +417,8 @@
   align-items: center;
   gap: .6rem;
 }
-.auth-alt-icon  { width: 20px; height: 20px; flex-shrink: 0; }
-.auth-btn-arrow { font-size: 1.1rem; color: var(--a-sub); transition: transform .2s; }
+.auth-alt-icon  { width: 20px; height: 20px; flex-shrink: 0; color: var(--label-text); }
+.auth-btn-arrow { font-size: 1.1rem; color: var(--label-text); transition: transform .2s, color .2s; }
 .auth-btn-alt:hover .auth-btn-arrow { transform: translateX(3px); color: var(--a-blue); }
 
 /* ── Responsive ── */

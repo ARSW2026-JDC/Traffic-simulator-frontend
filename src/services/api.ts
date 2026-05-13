@@ -52,7 +52,7 @@ export async function getHistory(limit = 50, cursor?: string, simId?: string) {
   const params: any = { limit: String(limit) };
   if (cursor) params.cursor = cursor;
   if (simId) params.simId = simId;
-  const res = await api.get('/history/history', { params });
+  const res = await api.get('/history/history/history', { params });
   return res.data;
 }
 
