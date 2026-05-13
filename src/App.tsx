@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './services/firebase';
 import { useAuthStore } from './stores/authStore';
+import { useThemeStore } from './stores/themeStore';
 import AuthPage from './pages/AuthPage';
 import SimulationPage from './pages/SimulationPage';
 import LandingPage from './pages/LandingPage';
@@ -11,6 +12,11 @@ import { User } from 'firebase/auth/cordova';
 
 export default function App() {
   const { firebaseUser, user, setFirebaseUser, setUser, setLoading, isLoading } = useAuthStore();
+  const initializeTheme = useThemeStore((s) => s.initializeTheme);
+
+  useEffect(() => {
+    initializeTheme();
+  }, [initializeTheme]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (fbUser: User | null) => {

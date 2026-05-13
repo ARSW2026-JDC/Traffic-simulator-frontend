@@ -11,6 +11,16 @@
   --text-sub:   #4B5563;
 }
 
+.dark {
+  --blue:       #3B82F6;
+  --blue-light: #60A5FA;
+  --gray:       #374151;
+  --gray-dark:  #9CA3AF;
+  --white:      #1A1A1A;
+  --text:       #F9FAFB;
+  --text-sub:  #D1D5DB;
+}
+
 /* Reset + base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -63,6 +73,24 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.cuts-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--gray);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cuts-theme-toggle:hover {
+  background: var(--gray);
 }
 
 .cuts-btn-ghost {
