@@ -804,10 +804,12 @@ function AddEntityForm({ simSocket }: { simSocket: RefObject<Socket | null> }) {
       });
     } else {
       simSocket.current.emit('command', {
+        simId: activeSimId ?? undefined,
         type: 'add_traffic_light',
         data: {
           lat,
           lon,
+          name: name || undefined,
           greenMs: green * 1000,
           yellowMs: yellow * 1000,
           redMs: red * 1000,
