@@ -80,12 +80,39 @@ export function useHistorySocket() {
       path: '/history/socket.io',
       auth: { token, simId: requestedSimId },
       transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 500,
+      reconnectionDelayMax: 10000,
+      randomizationFactor: 0.3,
     });
 
     socketRef.current = socket;
 
     socket.on('connect', () => {
+      console.info('[HistorySocket] Connected:', socket.id);
       void fetchHistory();
+    });
+
+    socket.on('disconnect', (reason: string) => {
+      console.info('[HistorySocket] Disconnected:', reason);
+    });
+
+    socket.on('connect_error', (err: Error) => {
+      console.error('[HistorySocket] Connect error:', err.message);
+    });
+
+    socket.on('reconnect_attempt', (attempt: number) => {
+      console.info(`[HistorySocket] Reconnect attempt #${attempt}`);
+    });
+
+    socket.on('reconnect', (attempt: number) => {
+      console.info(`[HistorySocket] Reconnected after ${attempt} attempts`);
+      void fetchHistory();
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.warn('[HistorySocket] Reconnect failed - will keep trying');
     });
 
     socket.on('history:new', (entry: ChangeLogEntry) => addEntry(entry));

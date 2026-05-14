@@ -30,23 +30,43 @@ export function useSimulationSocket() {
       path: '/sim/socket.io',
       auth: { token },
       transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 500,
+      reconnectionDelayMax: 10000,
+      randomizationFactor: 0.3,
     });
 
     socketRef.current = socket;
 
     socket.on('connect', () => {
+      console.info('[SimSocket] Connected:', socket.id);
       setConnected(true);
-      const activeSimId = useSimulationStore.getState().activeSimId;
-      if (activeSimId) {
-        socket.emit('sync:request', { simId: activeSimId });
-        socket.emit('routes:request');
-        lastJoinedSimId.current = activeSimId;
-      } else {
-        socket.emit('sync:request');
-      }
+      socket.emit('sync:request');
     });
 
-    socket.on('disconnect', () => setConnected(false));
+    socket.on('disconnect', (reason) => {
+      console.info('[SimSocket] Disconnected:', reason);
+      setConnected(false);
+    });
+
+    socket.on('connect_error', (err: Error) => {
+      console.error('[SimSocket] Connect error:', err.message);
+    });
+
+    socket.on('reconnect_attempt', (attempt: number) => {
+      console.info(`[SimSocket] Reconnect attempt #${attempt}`);
+    });
+
+    socket.on('reconnect', (attempt: number) => {
+      console.info(`[SimSocket] Reconnected after ${attempt} attempts`);
+      setConnected(true);
+      socket.emit('sync:request');
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.warn('[SimSocket] Reconnect failed - will keep trying');
+    });
 
     socket.on('simulation:full-state', (state: SimulationFullState) => {
       setFullState(state.vehicles, state.trafficLights, state.tick);
@@ -94,6 +114,7 @@ export function useSimulationSocket() {
     });
 
     socket.on('error', (error: { message: string }) => {
+      console.error('[SimSocket] Error:', error.message);
       setErrorMessage(error.message);
       setTimeout(() => setErrorMessage(null), 5000);
     });
