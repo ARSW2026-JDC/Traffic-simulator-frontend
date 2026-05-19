@@ -305,9 +305,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           <h3 className="text-sm text-black dark:text-[var(--s-text)] font-medium">Simulaciones activas</h3>
           <button
             onClick={loadAll}
-            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
+            className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+            title="Actualizar"
           >
-            Actualizar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
           </button>
         </div>
 
@@ -407,9 +411,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           <h3 className="text-sm text-[var(--s-text)] font-medium">Mapas disponibles</h3>
           <button
             onClick={loadMaps}
-            className="text-xs text-[#2258B1] hover:text-[#1a46a0] transition-colors"
+            className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+            title="Actualizar"
           >
-            Actualizar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" />
+            </svg>
           </button>
         </div>
 
