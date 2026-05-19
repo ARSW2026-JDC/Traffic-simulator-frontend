@@ -688,7 +688,8 @@ function EntityList({
   type: 'vehicle' | 'trafficLight';
   simSocket: RefObject<Socket | null>;
 }) {
-  const { vehicles, trafficLights, activeSimId } = useSimulationStore();
+  const { vehicles, trafficLights, activeSimId, selectEntity, setLeftPanelTab } =
+    useSimulationStore();
   const items =
     type === 'vehicle' ? Object.values(vehicles) : Object.values(trafficLights);
 
@@ -722,13 +723,20 @@ function EntityList({
   return (
     <div className="divide-y divide-[var(--s-border)] border-y border-[var(--s-border)]">
       {items.map((item) => (
-        <div key={item.id} className="px-4 py-3 flex items-center justify-between">
+        <div
+          key={item.id}
+          className="px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-[var(--s-hover)] transition-colors"
+          onClick={() => {
+            selectEntity(item.id, type);
+            setLeftPanelTab('control');
+          }}
+        >
           <div>
             <p className="text-sm text-[var(--s-text)]">{item.name}</p>
             <p className="text-xs text-[var(--s-sub)] font-mono">{item.id}</p>
           </div>
           <button
-            onClick={() => remove(item.id)}
+            onClick={(e) => { e.stopPropagation(); remove(item.id); }}
             className="text-red-400 hover:text-red-300 transition-colors p-1 rounded"
             title="Eliminar"
           >

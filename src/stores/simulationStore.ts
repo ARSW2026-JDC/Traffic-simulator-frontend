@@ -21,11 +21,13 @@ interface SimulationStore {
   activeSimId: string | null;
   bbox: BBox | null;
   basemapId: string;
+  leftPanelTab: 'control' | 'admin';
   addMode: 'vehicle' | 'trafficLight' | null;
   clickPosition: { lat: number; lng: number } | null;
   errorMessage: string | null;
   simStats: SimulationStats | null;
   setSimStats: (stats: SimulationStats) => void;
+  setLeftPanelTab: (tab: 'control' | 'admin') => void;
   setFullState: (
     vehicles: Record<string, Vehicle>,
     trafficLights: Record<string, TrafficLight>,
@@ -57,6 +59,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   activeSimId: null,
   bbox: null,
   basemapId: 'cartoLight',
+  leftPanelTab: 'control',
   addMode: null,
   clickPosition: null,
   errorMessage: null,
@@ -94,6 +97,7 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   setActiveSimId: (activeSimId) => set({ activeSimId }),
   setBbox: (bbox) => set({ bbox }),
   setBasemapId: (basemapId) => set({ basemapId }),
+  setLeftPanelTab: (leftPanelTab) => set({ leftPanelTab }),
   setAddMode: (addMode) => set({ addMode }),
   setClickPosition: (clickPosition) => set({ clickPosition }),
   setErrorMessage: (errorMessage) => set({ errorMessage }),
