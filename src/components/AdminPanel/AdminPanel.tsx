@@ -133,6 +133,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
   const removeSimulation = async (id: string) => {
     if (!id) return;
+    if (!confirm('¿Eliminar esta simulación?\nEsta acción no se puede deshacer.')) return;
     setDeletingId(id);
     setError('');
     try {
@@ -421,9 +422,13 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
         )}
       </section>
 
-      <section className="space-y-2">
+      <details className="space-y-2 group">
+        <summary className="text-sm font-medium text-[var(--s-text)] cursor-pointer list-none flex items-center gap-2 p-1 rounded hover:bg-[var(--s-gray)] transition-colors">
+          <span className="text-xs transition-transform group-open:rotate-90">▶</span>
+          Importar mapa
+        </summary>
+        <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm text-[var(--s-text)] font-medium">Importar mapa</h3>
           <button
             type="button"
             onClick={fillFromBbox}
@@ -550,7 +555,8 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
             </pre>
           </div>
         </div>
-      </section>
+      </div>
+      </details>
 
       <section className="space-y-2">
         <h3 className="text-sm text-[var(--s-text)] font-medium">Crear simulación</h3>
