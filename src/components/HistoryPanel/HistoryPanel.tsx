@@ -29,6 +29,12 @@ const ACTION_VERBS: Record<string, string> = {
   delete: 'eliminó',
 };
 
+function actionFromField(field: string | undefined): string {
+  if (field === 'created') return 'add';
+  if (field === 'deleted') return 'delete';
+  return 'modify';
+}
+
 function formatTime(ts: number) {
   return new Intl.DateTimeFormat(undefined, {
     timeStyle: 'short',
@@ -43,7 +49,7 @@ function formatDateTime(ts: number) {
 }
 
 function getActionInfo(entry: ChangeLogEntry) {
-  const action = entry.action || (entry.field === 'created' ? 'add' : entry.field === 'deleted' ? 'delete' : 'modify');
+  const action = entry.action || actionFromField(entry.field);
   return {
     verb: ACTION_VERBS[action] || 'actualizo',
     color: ACTION_COLORS[action] || '#2563eb'
@@ -175,7 +181,7 @@ if (entries.length === 0) {
 
       {selected && (
         <div className="history-drawer-overlay" role="dialog" aria-modal="true">
-          <div className="history-drawer-backdrop" onClick={() => setSelected(null)} />
+          <div className="history-drawer-backdrop" role="presentation" onClick={() => setSelected(null)} />
           <div className="history-drawer-panel">
             <div className="history-drawer-header">
               <div>

@@ -163,6 +163,24 @@ export default function ControlPanel({ simSocket }: Props) {
   );
 }
 
+function statusColor(s: string): string {
+  if (s === 'moving') return 'bg-green-400';
+  if (s === 'waiting') return 'bg-yellow-400';
+  return 'bg-red-400';
+}
+
+function statusLabel(s: string): string {
+  if (s === 'moving') return 'En movimiento';
+  if (s === 'waiting') return 'Esperando';
+  return 'Detenido';
+}
+
+function lightStateLabel(s: string): string {
+  if (s === 'green') return 'Verde';
+  if (s === 'yellow') return 'Amarillo';
+  return 'Rojo';
+}
+
 function VehicleControls({
   vehicle,
   simSocket,
@@ -204,18 +222,8 @@ function VehicleControls({
       <div className="bg-[var(--s-gray)] rounded-lg p-3 space-y-1">
         <p className="text-xs text-[var(--s-sub)]">Estado</p>
         <div className="flex items-center gap-2">
-          <div
-            className={`w-2 h-2 rounded-full ${
-              vehicle.status === 'moving'
-                ? 'bg-green-400'
-                : vehicle.status === 'waiting'
-                  ? 'bg-yellow-400'
-                  : 'bg-red-400'
-            }`}
-          />
-          <span className="text-xs text-[var(--s-text)] capitalize">
-            {vehicle.status === 'moving' ? 'En movimiento' : vehicle.status === 'waiting' ? 'Esperando' : 'Detenido'}
-          </span>
+          <div className={`w-2 h-2 rounded-full ${statusColor(vehicle.status)}`} />
+          <span className="text-xs text-[var(--s-text)] capitalize">{statusLabel(vehicle.status)}</span>
         </div>
       </div>
 
@@ -346,7 +354,7 @@ function LightControls({
         <div className={`w-4 h-4 rounded-full ${stateColors[light.state]}`} />
         <div>
           <p className="text-xs text-[var(--s-text)]">
-            {light.state === 'green' ? 'Verde' : light.state === 'yellow' ? 'Amarillo' : 'Rojo'}
+            {lightStateLabel(light.state)}
           </p>
         </div>
       </div>

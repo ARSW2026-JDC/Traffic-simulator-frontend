@@ -146,8 +146,8 @@ export default function StatsBar() {
         </span>
         <span className="sim-stats-divider" />
         <span className="sim-stats-item sim-stats-item--tight">
-          <span className="sim-stats-red">{redLightCount}</span>
-          <span className="sim-stats-muted">/{totalLights}</span>
+          <span className="sim-stats-icon">🚦</span>
+          <AnimatedCounter value={totalLights} />
         </span>
         <span className="sim-stats-hint">i</span>
       </button>

@@ -76,7 +76,7 @@ function DropdownButton({
         <span className="custom-dropdown-arrow">▼</span>
       </button>
       {open && (
-        <div className="custom-dropdown-menu" onClick={(e) => e.stopPropagation()}>
+        <div className="custom-dropdown-menu" role="listbox" onClick={(e) => e.stopPropagation()}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -291,7 +291,7 @@ export default function UserManagementModal({ onClose }: Props) {
 
   return (
     <div className="umm-overlay">
-      <div className="umm-popup" ref={modalRef} onClick={(e) => e.stopPropagation()}>
+      <div className="umm-popup" ref={modalRef} role="none" onClick={(e) => e.stopPropagation()}>
         <div className="umm-header">
           <h2>Gestión de Usuarios</h2>
           <button onClick={(e) => { e.stopPropagation(); onClose(); }} className="umm-close" aria-label="Cerrar">×</button>
@@ -412,8 +412,8 @@ export default function UserManagementModal({ onClose }: Props) {
       </div>
 
       {selectedUser && editedUser && (
-        <div className="umm-edit-overlay" onClick={handleOuterClose}>
-          <div className="umm-edit-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="umm-edit-overlay" role="presentation" onClick={handleOuterClose}>
+          <div className="umm-edit-modal" role="none" onClick={(e) => e.stopPropagation()}>
             <div className="umm-edit-header">
               <h3>Editar</h3>
               <button onClick={handleCancel} className="umm-edit-close" disabled={saving}>×</button>

@@ -25,8 +25,8 @@ export default function ConfirmDialog({ open, title, message, confirmLabel = 'Co
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onCancel}>
-      <div className="bg-white dark:bg-[#1f2937] rounded-xl shadow-2xl max-w-sm w-full mx-4 p-6 text-sm" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" role="presentation" onClick={onCancel}>
+      <div className="bg-white dark:bg-[#1f2937] rounded-xl shadow-2xl max-w-sm w-full mx-4 p-6 text-sm" role="none" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-base font-semibold text-[var(--s-text)] mb-2">{title}</h3>
         <p className="text-[var(--s-sub)] mb-6">{message}</p>
         <div className="flex justify-end gap-3">

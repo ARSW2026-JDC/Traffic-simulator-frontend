@@ -443,7 +443,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
 
       <details className="space-y-2 group">
         <summary className="text-sm font-medium text-[var(--s-text)] cursor-pointer list-none flex items-center gap-2 p-1 rounded hover:bg-[var(--s-gray)] transition-colors">
-          <span className="text-xs transition-transform group-open:rotate-90">▶</span>
+          <span className="text-xs transition-transform group-open:rotate-90">▶</span>{' '}
           Importar mapa
         </summary>
         <div className="space-y-2">
