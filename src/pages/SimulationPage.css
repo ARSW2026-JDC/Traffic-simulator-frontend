@@ -1856,6 +1856,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .sim-stats-row {
@@ -1863,6 +1866,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.25rem 0;
+}
+
+.sim-stats-row--clickable {
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 4px;
+  padding: 0.25rem 0.35rem;
+  margin: 0 -0.35rem;
+}
+
+.sim-stats-row--clickable:hover {
+  background: var(--s-hover, rgba(255, 255, 255, 0.06));
 }
 
 .sim-stats-label {
@@ -1884,15 +1899,49 @@
   font-weight: 500;
   color: var(--s-sub);
   text-align: right;
-  max-width: 160px;
+  max-width: 240px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.sim-stats-node-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  background: #2258B1;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+.sim-stats-node-label {
+  font-size: 0.6rem;
+  font-weight: 500;
+  margin-left: 3px;
+  vertical-align: middle;
+}
+
 .sim-stats-group {
   padding: 0.35rem 0;
   border-top: 1px solid var(--s-border);
+}
+
+.sim-stats-group--clickable {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.35rem 0.35rem;
+  margin: 0 -0.35rem;
+  transition: background 0.15s;
+}
+
+.sim-stats-group--clickable:hover {
+  background: var(--s-hover, rgba(255, 255, 255, 0.06));
 }
 
 .sim-stats-row--main {

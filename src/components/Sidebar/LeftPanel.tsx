@@ -31,7 +31,7 @@ export default function LeftPanel({ simSocket, openMobile, onCloseMobile }: Prop
             onClick={() => setTab('admin')}
             className={`sim-panel-tab ${tab === 'admin' ? 'sim-panel-tab--active' : 'sim-panel-tab--idle'}`}
           >
-            Admin
+            Administración
           </button>
         )}
       </div>

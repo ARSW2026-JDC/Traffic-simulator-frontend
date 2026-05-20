@@ -20,6 +20,7 @@ export interface Vehicle {
   routeId: string;
   waypointIndex: number;
   status: 'moving' | 'stopped' | 'waiting';
+  profile?: string;
 }
 
 export interface TrafficLight {
@@ -113,7 +114,11 @@ export interface SimulationStats {
     edgeId: number
     highwayType: string
     vehicleCount: number
+    avgSpeed: number
+    lat: number
+    lng: number
   } | null
+  profileCounts: Record<string, number>
   tick: number
   timestamp: number
 }

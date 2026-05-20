@@ -159,7 +159,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
       return;
     }
     if (useDriverMix && !driverMixValid) {
-      setCreateError('DriverMix debe sumar 1.');
+      setCreateError('La mezcla de conductores debe sumar 1.');
       return;
     }
 
@@ -515,7 +515,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </div>
 
           <div className="flex items-center justify-between text-xs text-[var(--s-sub)]">
-            <span>{bboxValid ? 'BBox valido' : 'BBox invalido'}</span>
+            <span>{bboxValid ? 'Área válida' : 'Área inválida'}</span>
             <button
               type="button"
               onClick={clearBbox}
@@ -614,7 +614,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
               onChange={(e) => setUseDriverMix(e.target.checked)}
               className="accent-[#2258B1]"
             />
-            Usar driverMix (debe sumar 1)
+            Usar mezcla de conductores (debe sumar 1)
           </label>
 
           {useDriverMix && (

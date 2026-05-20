@@ -121,9 +121,9 @@ export default function ControlPanel({ simSocket }: Props) {
       {!entity ? (
         <div className="flex flex-col items-center justify-center p-6 text-center">
           <div className="text-4xl mb-3">🗺️</div>
-          <p className="text-[var(--s-sub)] text-xs">Click on a vehicle or traffic light on the map to select it.</p>
+          <p className="text-[var(--s-sub)] text-xs">Haz clic en un vehículo o semáforo del mapa para seleccionarlo.</p>
           {!canEdit && (
-              <p className="text-xs text-[var(--s-sub)] mt-2">Guest mode — view only.</p>
+              <p className="text-xs text-[var(--s-sub)] mt-2">Modo invitado — solo visualización.</p>
           )}
         </div>
       ) : (
@@ -213,7 +213,9 @@ function VehicleControls({
                   : 'bg-red-400'
             }`}
           />
-          <span className="text-xs text-[var(--s-text)] capitalize">{vehicle.status}</span>
+          <span className="text-xs text-[var(--s-text)] capitalize">
+            {vehicle.status === 'moving' ? 'En movimiento' : vehicle.status === 'waiting' ? 'Esperando' : 'Detenido'}
+          </span>
         </div>
       </div>
 
@@ -343,7 +345,9 @@ function LightControls({
       <div className="bg-[var(--s-gray)] rounded-lg p-3 flex items-center gap-3">
         <div className={`w-4 h-4 rounded-full ${stateColors[light.state]}`} />
         <div>
-          <p className="text-xs text-[var(--s-text)] capitalize">{light.state}</p>
+          <p className="text-xs text-[var(--s-text)]">
+            {light.state === 'green' ? 'Verde' : light.state === 'yellow' ? 'Amarillo' : 'Rojo'}
+          </p>
         </div>
       </div>
 

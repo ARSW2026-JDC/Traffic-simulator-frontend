@@ -47,6 +47,15 @@ function RelativeTime({ timestamp }: { timestamp: number }) {
   return <span className="sim-stats-ago">↻ {text}</span>
 }
 
+const PROFILE_ORDER = ['aggressive', 'normal', 'cautious', 'truck', 'bus'] as const
+const PROFILE_LABELS: Record<string, string> = {
+  aggressive: 'Agresivos',
+  normal: 'Normales',
+  cautious: 'Cautelosos',
+  truck: 'Camiones',
+  bus: 'Autobuses',
+}
+
 const TOOLTIP_COLLAPSED = 'Haz clic para ver estadísticas detalladas de la simulación'
 
 export default function StatsBar() {
@@ -56,6 +65,7 @@ export default function StatsBar() {
   const trafficLights = useSimulationStore((s) => s.trafficLights)
   const activeSimId = useSimulationStore((s) => s.activeSimId)
   const simStats = useSimulationStore((s) => s.simStats)
+  const setHighlightPosition = useSimulationStore((s) => s.setHighlightPosition)
 
   const localStats = useMemo(() => {
     const vList = Object.values(vehicles)
@@ -64,6 +74,12 @@ export default function StatsBar() {
     const avgSpeed = vList.length > 0
       ? vList.reduce((sum, v) => sum + v.speed, 0) / vList.length
       : 0
+
+    const profileCounts: Record<string, number> = {}
+    vList.forEach((v) => {
+      const p = v.profile ?? 'normal'
+      profileCounts[p] = (profileCounts[p] || 0) + 1
+    })
 
     return {
       avgSpeed: Math.round(avgSpeed * 10) / 10,
@@ -75,6 +91,7 @@ export default function StatsBar() {
       greenLightCount: lList.filter((l) => l.state === 'green').length,
       yellowLightCount: lList.filter((l) => l.state === 'yellow').length,
       totalLights: lList.length,
+      profileCounts,
     }
   }, [vehicles, trafficLights])
 
@@ -88,6 +105,7 @@ export default function StatsBar() {
   const yellowLightCount = simStats?.yellowLightCount ?? localStats.yellowLightCount
   const totalLights = simStats?.totalLights ?? localStats.totalLights
   const mostCongestedEdge = simStats?.mostCongestedEdge
+  const profileCounts = simStats?.profileCounts ?? localStats.profileCounts
 
   const collapse = useCallback(() => setExpanded(false), [])
   const toggle = useCallback(() => setExpanded((v) => !v), [])
@@ -197,14 +215,52 @@ export default function StatsBar() {
           </div>
         </div>
 
-        {mostCongestedEdge && (
-          <div className="sim-stats-row">
-            <span className="sim-stats-label">🚧 Calle congestionada</span>
-            <span className="sim-stats-value sim-stats-value--sm">
-              Edge-{mostCongestedEdge.edgeId} · {mostCongestedEdge.highwayType} · {mostCongestedEdge.vehicleCount} veh
-            </span>
+        <div className="sim-stats-group">
+          <div className="sim-stats-row sim-stats-row--main">
+            <span className="sim-stats-label">👤 Perfiles</span>
+            <span className="sim-stats-value"><AnimatedCounter value={vehicleCount} /></span>
           </div>
-        )}
+          <div className="sim-stats-subrows">
+            {PROFILE_ORDER.map((profile) => {
+              const count = profileCounts?.[profile] ?? 0
+              if (count === 0) return null
+              return (
+                <div key={profile} className="sim-stats-subrow">
+                  <span className="sim-stats-dot sim-stats-dot--moving" />
+                  <span>{PROFILE_LABELS[profile] ?? profile}</span>
+                  <span className="sim-stats-subvalue"><AnimatedCounter value={count} /></span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {mostCongestedEdge && (() => {
+          const congestionPct = vehicleCount > 0
+            ? Math.round((mostCongestedEdge.vehicleCount / vehicleCount) * 100)
+            : 0
+          return (
+            <div className="sim-stats-group sim-stats-group--clickable"
+                 title="Haz clic para centrar en esta calle"
+                 onClick={() => setHighlightPosition({ lat: mostCongestedEdge.lat, lng: mostCongestedEdge.lng })}>
+              <div className="sim-stats-row sim-stats-row--main">
+                <span className="sim-stats-label">🚧 Calle congestionada</span>
+              </div>
+              <div className="sim-stats-subrows">
+                <div className="sim-stats-subrow">
+                  <span className="sim-stats-node-badge">{mostCongestedEdge.edgeId}</span>
+                  <span className="sim-stats-node-label">Nodo</span>
+                </div>
+                <div className="sim-stats-subrow">
+                  <span>{mostCongestedEdge.vehicleCount} veh ({congestionPct}%)</span>
+                </div>
+                <div className="sim-stats-subrow">
+                  <span>{(mostCongestedEdge.avgSpeed ?? 0).toFixed(1)} km/h</span>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
 
         <RelativeTime timestamp={simStats?.timestamp ?? 0} />
       </div>

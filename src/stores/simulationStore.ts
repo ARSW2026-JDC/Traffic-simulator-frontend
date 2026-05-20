@@ -26,7 +26,9 @@ interface SimulationStore {
   clickPosition: { lat: number; lng: number } | null;
   errorMessage: string | null;
   simStats: SimulationStats | null;
+  highlightPosition: { lat: number; lng: number } | null;
   setSimStats: (stats: SimulationStats) => void;
+  setHighlightPosition: (pos: { lat: number; lng: number } | null) => void;
   setLeftPanelTab: (tab: 'control' | 'admin') => void;
   setFullState: (
     vehicles: Record<string, Vehicle>,
@@ -64,11 +66,13 @@ export const useSimulationStore = create<SimulationStore>((set) => ({
   clickPosition: null,
   errorMessage: null,
   simStats: null,
+  highlightPosition: null,
 
   setFullState: (vehicles, trafficLights, tick) =>
     set({ vehicles, trafficLights, tick, simStats: null }),
 
   setSimStats: (simStats) => set({ simStats }),
+  setHighlightPosition: (highlightPosition) => set({ highlightPosition }),
 
   applyDelta: (delta) =>
     set((state) => {
