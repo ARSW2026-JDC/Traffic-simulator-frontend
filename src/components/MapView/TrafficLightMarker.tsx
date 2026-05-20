@@ -4,7 +4,7 @@ import type { TrafficLight } from '../../types';
 
 const STATE_COLORS = { green: '#22c55e', yellow: '#f59e0b', red: '#ef4444' };
 
-function getLightLabel(state: string): string {
+export function getLightLabel(state: string): string {
   if (state === 'green') return 'Verde';
   if (state === 'yellow') return 'Amarillo';
   return 'Rojo';

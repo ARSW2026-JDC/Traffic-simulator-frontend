@@ -31,7 +31,7 @@ interface Props {
   simSocket: RefObject<Socket | null>;
 }
 
-function getStatusLabel(status: string): string {
+export function getStatusLabel(status: string): string {
   if (status === 'moving') return 'En movimiento';
   if (status === 'waiting') return 'Esperando';
   return 'Detenido';

@@ -163,19 +163,19 @@ export default function ControlPanel({ simSocket }: Props) {
   );
 }
 
-function statusColor(s: string): string {
+export function statusColor(s: string): string {
   if (s === 'moving') return 'bg-green-400';
   if (s === 'waiting') return 'bg-yellow-400';
   return 'bg-red-400';
 }
 
-function statusLabel(s: string): string {
+export function statusLabel(s: string): string {
   if (s === 'moving') return 'En movimiento';
   if (s === 'waiting') return 'Esperando';
   return 'Detenido';
 }
 
-function lightStateLabel(s: string): string {
+export function lightStateLabel(s: string): string {
   if (s === 'green') return 'Verde';
   if (s === 'yellow') return 'Amarillo';
   return 'Rojo';

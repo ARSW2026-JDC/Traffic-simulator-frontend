@@ -29,7 +29,7 @@ const ACTION_VERBS: Record<string, string> = {
   delete: 'eliminó',
 };
 
-function actionFromField(field: string | undefined): string {
+export function actionFromField(field: string | undefined): string {
   if (field === 'created') return 'add';
   if (field === 'deleted') return 'delete';
   return 'modify';
