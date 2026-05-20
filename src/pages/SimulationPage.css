@@ -550,13 +550,13 @@
 }
 
 .dark .sim-mobile-close {
-  background: #374151;
-  color: #f9fafb;
+  background: transparent;
+  color: var(--s-blue);
   border-top-color: #4b5563;
 }
 
 .dark .sim-mobile-close:hover {
-  background: #2d3748;
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .sim-right-tabs.two-cols {
@@ -845,10 +845,17 @@
   border: 1px solid var(--s-border);
   background: #ffffff;
   color: var(--s-text);
+  transition: background 0.15s, color 0.15s;
   border-radius: 8px;
   padding: .35rem .6rem;
   font-size: .75rem;
   cursor: pointer;
+}
+
+.dark .sim-drawer-close {
+  background: transparent;
+  color: var(--s-blue);
+  border-color: var(--s-blue);
 }
 
 .sim-drawer-section h4,
@@ -1603,15 +1610,16 @@
   flex-shrink: 0;
 }
 .dark .history-drawer-close {
-  background: #374151;
-  color: #9ca3af;
+  background: transparent;
+  color: var(--s-blue);
 }
 
 .history-drawer-close:hover {
   background: #e2e8f0;
 }
 .dark .history-drawer-close:hover {
-  background: #374151;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
 }
 
 .history-drawer-section h4,
