@@ -940,6 +940,25 @@
   .sim-drawer-diff-row {
     grid-template-columns: 1fr;
   }
+  .history-drawer-title {
+    word-break: break-word;
+  }
+  .sim-stats-bar {
+    top: 8px;
+    right: 8px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+    gap: 0.3rem;
+  }
+  .sim-stats-panel {
+    top: 8px;
+    right: 8px;
+  }
+  .sim-stats-hint {
+    width: 12px;
+    height: 12px;
+    font-size: 0.45rem;
+  }
 }
 
 .sim-history-item {
@@ -1120,15 +1139,19 @@
   }
 
 .sim-mobile-close {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     border-top: 1px solid var(--s-border);
-    padding: 0.6rem;
+    padding: 0.5rem;
     background: #fff;
     color: var(--s-blue);
-    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1;
     cursor: pointer;
     margin-top: auto;
+    min-height: 44px;
   }
 
   .sim-mobile-close:hover {
@@ -1189,6 +1212,24 @@
   }
 
   .sim-chat-send {
+    min-height: 44px;
+  }
+
+  .sim-chat-input {
+    min-height: 44px;
+  }
+
+  .sim-panel-content input,
+  .sim-panel-content select {
+    min-height: 44px;
+  }
+
+  .sim-panel-content button {
+    min-height: 44px;
+  }
+
+  .umm-search,
+  .umm-filter {
     min-height: 44px;
   }
 
@@ -1288,6 +1329,24 @@
     width: 40px;
     height: 40px;
     font-size: 1.2rem;
+  }
+
+  .sim-stats-hint {
+    display: none;
+  }
+  .sim-stats-bar {
+    top: 6px;
+    right: 6px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.6rem;
+    gap: 0.2rem;
+    border-radius: 8px;
+  }
+  .sim-stats-panel {
+    width: calc(100vw - 16px);
+    top: 6px;
+    right: 8px;
+    border-radius: 10px;
   }
 }
 
@@ -1708,6 +1767,9 @@
   color: var(--s-text);
   white-space: nowrap;
   user-select: none;
+  max-width: 80vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: auto;
   min-width: 0;
   height: auto;
@@ -1787,7 +1849,7 @@
   top: 12px;
   right: 14px;
   z-index: 601;
-  width: 260px;
+  width: min(260px, calc(100vw - 28px));
   height: auto;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
@@ -1991,57 +2053,4 @@
   border-top: 1px solid var(--s-border);
 }
 
-/* ── DocumentationTooltip ── */
-.sim-doc-wrapper {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  cursor: help;
-}
 
-.sim-doc-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--s-gray);
-  color: var(--s-sub);
-  font-size: 0.5rem;
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1;
-  flex-shrink: 0;
-  transition: background 0.15s ease;
-}
-
-.sim-doc-wrapper:hover .sim-doc-icon {
-  background: #d1d5db;
-}
-
-.dark .sim-doc-wrapper:hover .sim-doc-icon {
-  background: #4b5563;
-}
-
-.sim-doc-tooltip {
-  position: fixed;
-  z-index: 9999;
-  max-width: 240px;
-  padding: 0.45rem 0.6rem;
-  background: var(--s-white);
-  border: 1px solid var(--s-border);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.65rem;
-  line-height: 1.4;
-  color: var(--s-sub);
-  pointer-events: none;
-  animation: sim-doc-fade 0.15s ease-out;
-}
-
-@keyframes sim-doc-fade {
-  from { opacity: 0; transform: translateY(-2px); }
-  to { opacity: 1; transform: translateY(0); }
-}

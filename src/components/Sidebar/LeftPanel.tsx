@@ -41,8 +41,8 @@ export default function LeftPanel({ simSocket, openMobile, onCloseMobile }: Prop
         {tab === 'admin' && isAdmin && <AdminPanel simSocket={simSocket} />}
       </div>
 
-      <button className="sim-mobile-close" onClick={onCloseMobile} type="button">
-        Cerrar
+      <button className="sim-mobile-close" onClick={onCloseMobile} type="button" aria-label="Cerrar panel">
+        ✕
       </button>
     </aside>
   );
