@@ -315,7 +315,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </button>
         </div>
 
-        {loading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
+        {loading && <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-[#2258B1] rounded-full border-t-2 border-transparent animate-spin" /><span className="text-xs text-[var(--s-sub)]">Cargando...</span></div>}
         {error && <p className="text-xs text-red-400">{error}</p>}
 
         {list.length === 0 && !loading ? (
@@ -421,7 +421,7 @@ function SimulationPanel({ simSocket }: { simSocket: RefObject<Socket | null> })
           </button>
         </div>
 
-        {mapsLoading && <p className="text-xs text-[var(--s-sub)]">Cargando...</p>}
+        {mapsLoading && <div className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-[#2258B1] rounded-full border-t-2 border-transparent animate-spin" /><span className="text-xs text-[var(--s-sub)]">Cargando...</span></div>}
         {mapsError && <p className="text-xs text-red-400">{mapsError}</p>}
 
         {maps.length === 0 && !mapsLoading ? (
@@ -744,29 +744,36 @@ function EntityList({
       {items.map((item) => (
         <div
           key={item.id}
-          className="px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-[var(--s-hover)] transition-colors"
-          onClick={() => {
-            selectEntity(item.id, type);
-            setLeftPanelTab('control');
-          }}
+          className="px-4 py-3 flex items-center justify-between hover:bg-[var(--s-hover)] transition-colors"
         >
           <div>
             <p className="text-sm text-[var(--s-text)]">{item.name}</p>
             <p className="text-xs text-[var(--s-sub)] font-mono">{item.id}</p>
           </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); remove(item.id); }}
-            className="text-red-400 hover:text-red-300 transition-colors p-1 rounded"
-            title="Eliminar"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-              <path d="M10 11v6" />
-              <path d="M14 11v6" />
-              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => { selectEntity(item.id, type); setLeftPanelTab('control'); }}
+              className="text-[#2258B1] hover:text-[#1a46a0] transition-colors p-1 rounded"
+              title="Editar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); remove(item.id); }}
+              className="text-red-400 hover:text-red-300 transition-colors p-1 rounded"
+              title="Eliminar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+              </svg>
+            </button>
+          </div>
         </div>
       ))}
     </div>

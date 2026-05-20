@@ -24,9 +24,9 @@ const ACTION_COLORS: Record<string, string> = {
 };
 
 const ACTION_VERBS: Record<string, string> = {
-  add: 'creo',
-  modify: 'actualizo',
-  delete: 'elimino',
+  add: 'creó',
+  modify: 'actualizó',
+  delete: 'eliminó',
 };
 
 function formatTime(ts: number) {
