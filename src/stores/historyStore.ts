@@ -24,17 +24,18 @@ export const useHistoryStore = create<HistoryStore>((set) => ({
   hasMore: true,
   cursor: null,
   addEntry: (e) =>
-    set((state) => ({
-      entries: state.entries.some((entry) => entry.id === e.id)
-        ? state.entries
-        : [e, ...state.entries],
-    })),
+    set((state) => {
+      if (state.entries.some((entry) => entry.id === e.id)) return state
+      const next = [e, ...state.entries]
+      return { entries: next.slice(0, 1000) }
+    }),
   appendEntries: (entries) =>
     set((state) => {
       if (entries.length === 0) return state;
       const existing = new Set(state.entries.map((e) => e.id));
       const next = entries.filter((e) => !existing.has(e.id));
-      return { entries: [...state.entries, ...next] };
+      const merged = [...state.entries, ...next]
+      return { entries: merged.slice(0, 1000) };
     }),
   setEntries: (entries) => set({ entries }),
   setLoading: (isLoading) => set({ isLoading }),

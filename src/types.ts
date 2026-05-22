@@ -36,6 +36,7 @@ export interface TrafficLight {
 }
 
 export interface SimulationFullState {
+  simId?: string;
   vehicles: Record<string, Vehicle>;
   trafficLights: Record<string, TrafficLight>;
   tick: number;
@@ -43,6 +44,7 @@ export interface SimulationFullState {
 }
 
 export interface SimulationDelta {
+  simId?: string;
   vehicles: Record<string, Partial<Vehicle>>;
   trafficLights: Record<string, Partial<TrafficLight>>;
   removed: string[];
@@ -101,6 +103,7 @@ export interface BBox {
 }
 
 export interface SimulationStats {
+  simId?: string
   avgSpeed: number
   vehicleCount: number
   movingCount: number

@@ -18,6 +18,7 @@ Interfaz de usuario para la aplicación de simulación de tráfico CUTS. Permite
 - **[Socket.io Client](https://socket.io/)** v4.6.1 - WebSocket
 - **[Firebase](https://firebase.google.com/)** v10.14.1 - Autenticación
 - **[Axios](https://axios-http.com/)** v1.6.2 - HTTP client
+- **[Vitest](https://vitest.dev/)** v1.6.1 - Tests
 
 ## Prerrequisitos
 
@@ -47,11 +48,24 @@ npm run preview
 
 ```bash
 npm test           # Unit tests
-npm run test:ui   # UI visual
 npm run test:coverage  # Coverage
+npm run test:ui   # UI visual
 ```
 
+## Scripts disponibles
+
+| Script | Descripción |
+|--------|-------------|
+| `npm run dev` | Desarrollo con Vite |
+| `npm run build` | Build de producción |
+| `npm run preview` | Preview del build |
+| `npm run test` | Unit tests |
+| `npm run test:coverage` | Coverage |
+| `npm run test:ui` | UI visual |
+
 ## Variables de Entorno
+
+Ver `env.example` para valores de referencia.
 
 | Variable | Descripción | Default |
 |----------|-------------|---------|
@@ -62,6 +76,18 @@ npm run test:coverage  # Coverage
 | `VITE_FIREBASE_STORAGE_BUCKET` | Firebase Storage Bucket | - |
 | `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase Sender ID | - |
 | `VITE_FIREBASE_APP_ID` | Firebase App ID | - |
+
+## Rutas y sockets (via Gateway)
+
+- REST usados por el frontend:
+  - `/api/*` (usuarios/auth del backend)
+  - `/chat/chat/chat/messages` (mensajes de chat)
+  - `/history/history/history` (historial)
+  - `/sim/sim` y `/sim/sim/:id` (simulaciones)
+- WebSocket:
+  - Chat: namespace `/chat`, path `/chat/socket.io`
+  - History: namespace `/history`, path `/history/socket.io`
+  - Simulation: namespace `/simulation`, path `/sim/socket.io`
 
 ## Estructura
 

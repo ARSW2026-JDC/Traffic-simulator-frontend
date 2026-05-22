@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, Fragment } from 'react';
+import { useEffect, useRef, useState, Fragment } from 'react';
 import { MapContainer, Rectangle, TileLayer, Circle, useMap, useMapEvents } from 'react-leaflet';
 import { useSimulationStore } from '../../stores/simulationStore';
 import { BASEMAPS, DEFAULT_BASEMAP_ID } from './basemaps';
@@ -12,10 +12,13 @@ import type { Socket } from 'socket.io-client';
 const DEFAULT_CENTER: [number, number] = [4.6, -74.0836];
 const DEFAULT_ZOOM = 13;
 
-function Markers({ simSocket }: { simSocket: RefObject<Socket | null> }) {
+function Markers() {
   useMap();
+  const activeSimId = useSimulationStore((s) => s.activeSimId);
   const vehicles = useSimulationStore((s) => s.vehicles);
   const trafficLights = useSimulationStore((s) => s.trafficLights);
+
+  if (!activeSimId) return null;
 
   return (
     <>
@@ -23,7 +26,7 @@ function Markers({ simSocket }: { simSocket: RefObject<Socket | null> }) {
         <TrafficLightMarker key={light.id} light={light} />
       ))}
       {Object.values(vehicles).map((vehicle) => (
-        <VehicleMarker key={vehicle.id} vehicle={vehicle} simSocket={simSocket} />
+        <VehicleMarker key={vehicle.id} vehicle={vehicle} />
       ))}
     </>
   );
@@ -52,19 +55,17 @@ function SimulationViewportController() {
   const trafficLights = useSimulationStore((s) => s.trafficLights);
   const lastFocusedSimRef = useRef<string | null>(null);
 
-  const points = useMemo<[number, number][]>(() => {
-    const vehiclePoints = Object.values(vehicles).map((vehicle) => [vehicle.lat, vehicle.lon] as [number, number]);
-    const lightPoints = Object.values(trafficLights).map((light) => [light.lat, light.lon] as [number, number]);
-    return [...vehiclePoints, ...lightPoints];
-  }, [vehicles, trafficLights]);
-
   useEffect(() => {
     if (!activeSimId) {
       lastFocusedSimRef.current = null;
+      map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
       return;
     }
 
     if (lastFocusedSimRef.current === activeSimId) return;
+    const vehiclePoints = Object.values(vehicles).map((vehicle) => [vehicle.lat, vehicle.lon] as [number, number]);
+    const lightPoints = Object.values(trafficLights).map((light) => [light.lat, light.lon] as [number, number]);
+    const points = [...vehiclePoints, ...lightPoints];
     if (points.length === 0) return;
 
     if (points.length === 1) {
@@ -74,7 +75,7 @@ function SimulationViewportController() {
     }
 
     lastFocusedSimRef.current = activeSimId;
-  }, [activeSimId, map, points]);
+  }, [activeSimId, map, vehicles, trafficLights]);
 
   return null;
 }
@@ -191,7 +192,7 @@ interface Props {
   simSocket: RefObject<Socket | null>;
 }
 
-export default function MapView({ simSocket }: Props) {
+export default function MapView({ simSocket: _simSocket }: Props) {
   const basemapId = useSimulationStore((s) => s.basemapId);
   const basemap =
     BASEMAPS.find((entry) => entry.id === basemapId) ??
@@ -205,6 +206,7 @@ export default function MapView({ simSocket }: Props) {
         zoom={DEFAULT_ZOOM}
         className="w-full h-full"
         zoomControl={false}
+        preferCanvas={true}
       >
         <TileLayer
           url={basemap.url}
@@ -217,7 +219,7 @@ export default function MapView({ simSocket }: Props) {
         <BboxSelector />
         <PickHandler />
         <HighlightedEdge />
-        <Markers simSocket={simSocket} />
+        <Markers />
       </MapContainer>
       <StatsBar />
     </Fragment>
