@@ -15,11 +15,8 @@ interface Props {
 }
 
 export default function TrafficLightMarker({ light }: Props) {
-  const { selectedId, selectEntity } = useSimulationStore((s) => ({
-    selectedId: s.selectedId,
-    selectEntity: s.selectEntity,
-  }));
-  const selected = selectedId === light.id;
+  const selected = useSimulationStore((s) => s.selectedId === light.id);
+  const selectEntity = useSimulationStore((s) => s.selectEntity);
 
   return (
     <CircleMarker
@@ -35,11 +32,13 @@ export default function TrafficLightMarker({ light }: Props) {
         click: () => selectEntity(light.id, 'trafficLight'),
       }}
     >
-      <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
-        <span className="text-xs">
-          {light.name} — {getLightLabel(light.state)}
-        </span>
-      </Tooltip>
+      {selected && (
+        <Tooltip direction="top" offset={[0, -8]} opacity={0.9}>
+          <span className="text-xs">
+            {light.name} — {getLightLabel(light.state)}
+          </span>
+        </Tooltip>
+      )}
     </CircleMarker>
   );
 }

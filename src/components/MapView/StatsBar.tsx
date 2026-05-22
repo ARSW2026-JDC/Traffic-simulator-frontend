@@ -68,6 +68,8 @@ export default function StatsBar() {
   const setHighlightPosition = useSimulationStore((s) => s.setHighlightPosition)
 
   const localStats = useMemo(() => {
+    if (simStats) return null
+
     const vList = Object.values(vehicles)
     const lList = Object.values(trafficLights)
 
@@ -93,19 +95,19 @@ export default function StatsBar() {
       totalLights: lList.length,
       profileCounts,
     }
-  }, [vehicles, trafficLights])
+  }, [simStats, vehicles, trafficLights])
 
-  const avgSpeed = simStats?.avgSpeed ?? localStats.avgSpeed
-  const vehicleCount = simStats?.vehicleCount ?? localStats.vehicleCount
-  const movingCount = simStats?.movingCount ?? localStats.movingCount
-  const waitingCount = simStats?.waitingCount ?? localStats.waitingCount
-  const stoppedCount = simStats?.stoppedCount ?? localStats.stoppedCount
-  const redLightCount = simStats?.redLightCount ?? localStats.redLightCount
-  const greenLightCount = simStats?.greenLightCount ?? localStats.greenLightCount
-  const yellowLightCount = simStats?.yellowLightCount ?? localStats.yellowLightCount
-  const totalLights = simStats?.totalLights ?? localStats.totalLights
+  const avgSpeed = simStats?.avgSpeed ?? localStats?.avgSpeed ?? 0
+  const vehicleCount = simStats?.vehicleCount ?? localStats?.vehicleCount ?? 0
+  const movingCount = simStats?.movingCount ?? localStats?.movingCount ?? 0
+  const waitingCount = simStats?.waitingCount ?? localStats?.waitingCount ?? 0
+  const stoppedCount = simStats?.stoppedCount ?? localStats?.stoppedCount ?? 0
+  const redLightCount = simStats?.redLightCount ?? localStats?.redLightCount ?? 0
+  const greenLightCount = simStats?.greenLightCount ?? localStats?.greenLightCount ?? 0
+  const yellowLightCount = simStats?.yellowLightCount ?? localStats?.yellowLightCount ?? 0
+  const totalLights = simStats?.totalLights ?? localStats?.totalLights ?? 0
   const mostCongestedEdge = simStats?.mostCongestedEdge
-  const profileCounts = simStats?.profileCounts ?? localStats.profileCounts
+  const profileCounts = simStats?.profileCounts ?? localStats?.profileCounts ?? {}
 
   const collapse = useCallback(() => setExpanded(false), [])
   const toggle = useCallback(() => setExpanded((v) => !v), [])
