@@ -4,10 +4,18 @@ import { createSimStats } from '../test/factories';
 
 describe('simulationStore', () => {
   beforeEach(() => {
-    useSimulationStore.getState().deselect();
-    useSimulationStore.getState().setAddMode(null);
-    useSimulationStore.getState().setClickPosition(null);
-    useSimulationStore.getState().setErrorMessage(null);
+    useSimulationStore.setState({
+      vehicles: {},
+      trafficLights: {},
+      tick: 0,
+      selectedId: null,
+      selectedType: null,
+      addMode: null,
+      clickPosition: null,
+      errorMessage: null,
+      simStats: null,
+      highlightPosition: null,
+    });
   });
 
   describe('addMode', () => {
